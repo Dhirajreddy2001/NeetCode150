@@ -1,0 +1,44 @@
+Question:
+Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+ 
+Example 1:
+
+Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1,2]
+
+There are Multiple ways to solve this problem 
+
+My Approach (usingMinHeap): 
+
+Algorithm: 
+Step 1 : Create frequency map using a HashMap that holds all the keys and count of their frequency
+Step 2 : Create an heap of size k and store only top k elements.
+Step 3 : Convert input from heap to an array and return tihs arrar;
+
+ public int[] topKFrequent(int[] nums, int k) {
+        // Step 1: Frequency Map setup.
+        Map<Integer, Integer> freqMap = new HashMap<>();
+        for (int num : nums) {
+            freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
+        }
+
+        // Step 2: Min Heap (size = k) based on frequency
+        PriorityQueue<Map.Entry<Integer, Integer>> minHeap = 
+            new PriorityQueue<>(Comparator.comparingInt(Map.Entry::getValue));  // Using min heap to sort entries from Map in ascending  order.
+
+        for (Map.Entry<Integer, Integer> entry : freqMap.entrySet()) {
+            minHeap.offer(entry); // Add current entry into the Heap
+            if (minHeap.size() > k) {
+                minHeap.poll(); // remove least frequent when heap size is greater than K
+            }
+        }
+
+        // Step 3: Extract result from heap to an array and return it.
+        int[] result = new int[k];
+        for (int i = k - 1; i >= 0; i--) {
+            result[i] = minHeap.poll().getKey();
+        }
+
+        return result;
+    }
+
