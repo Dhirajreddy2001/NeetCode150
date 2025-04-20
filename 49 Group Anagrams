@@ -1,0 +1,88 @@
+Problem Statement:
+Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+
+ 
+
+Example 1:
+
+Input: strs = ["eat","tea","tan","ate","nat","bat"]
+
+Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+
+Explanation:
+
+There is no string in strs that can be rearranged to form "bat".
+The strings "nat" and "tan" are anagrams as they can be rearranged to form each other.
+The strings "ate", "eat", and "tea" are anagrams as they can be rearranged to form each other.
+Example 2:
+
+Input: strs = [""]
+
+Output: [[""]]
+
+Solution :
+
+Algorithm:
+
+Approach 1: 
+Step 1: Calculate the key value by substracing character values of each letter fromt he word 
+Step 2: Use a map to store the key-value pairs to group anagram words
+Step 3: Check if the key already existis in the map if yes  add the word to this key list, else add key list and word to the map
+Ste 4: return the values of the map.
+
+public List<List<String>> groupAnagrams(String[] strs) {
+       if(strs.length == 0 ) return new ArrayList();  // testing for edge case of empty array
+
+       Map<String,List> retMap = new HashMap<>();
+
+       int[] count=new int[26];  
+
+       for(String s:strs)
+       {
+        Arrays.fill(count,0);   //reset the array to 0's
+        for(char c : s.toCharArray()){
+            count[c - 'a']++;  // creating the character sequence 
+
+        }
+
+        StringBuilder sb = new StringBuilder("");
+
+        for(int i=0; i<26;i++)
+        {
+            sb.append('#');
+            sb.append(count[i]);  //creating key by separating each character count with an # value to eliminate any ambiguity like 1 and 11 ex for cat key will be #1#0#1#---------
+        }
+        String key = sb.toString();
+        if(!retMap.containsKey(key))  // check if the map has this key value if false create a key entry in the HashMap  
+        {
+            retMap.put(key, new ArrayList());  
+        }
+        retMap.get(key).add(s);  // else just add the string to the respective key value.
+
+       }
+        return new ArrayList(retMap.values());
+    }
+}
+
+
+Apprach 2:
+Algorithm 
+Step 1 : Create an HashMap to hold key and lsit of values
+Step 2 : From the array extract an string and convert this string into and character array
+Step 3 : Sort this character array  and use this sorted array as key to check if this key exists in the Hashmap if yes then add this string to the corresponding key.
+Step 4 : If it does not exist add sorted array as key to the HashMap and also add this string to the list.
+
+ public List<List<String>> groupAnagrams(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for(String str: strs)
+        {
+            char[] ary = str.toCharArray();
+            Arrays.sort(ary);
+            String sortedStr = new String(ary);
+            List<String> list = map.getOrDefault(sortedStr, new ArrayList<>());
+            list.add(str);
+            map.put(sortedStr, list);
+        }
+        return new ArrayList<>(map.values());
+    }
+
