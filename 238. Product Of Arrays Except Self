@@ -1,0 +1,66 @@
+Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
+
+The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+
+You must write an algorithm that runs in O(n) time and without using the division operation.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,3,4]
+Output: [24,12,8,6]
+Example 2:
+
+Input: nums = [-1,1,0,-3,3]
+Output: [0,0,9,0,0]
+
+
+Solution 
+By using two variables prefix and postfix
+
+Algorithm:
+
+Step 1: Initialize an array called result to store the return values and initialise pre and post to 1.
+Step 2: Now in first part we will iterate for prefix with condition of result = prefix and prefix = prefix * nums[i]. 
+        This will help create an array result which holds values of previous products(left to right).
+Step 3: Now in second part we will iterate from end of the array to create the product of array elements(from right to left). which is like result[i] = result [i] * post , post = post * nums[i];
+   
+Tracing 
+
+pre = 1
+result = [0,0,0,0]
+i	nums[i]	pre (before)	result[i] = pre	pre (after)
+0	  1	    1	              1	              1 * 1 = 1
+1	  2	    1	              1	              1 * 2 = 2
+2	  3	    2	              2	              2 * 3 = 6
+3	  4	    6	              6	              6 * 4 = 24
+
+post = 1
+result = [1,1,2,6]
+i	nums[i]	post (before)	result[i] (before)	result[i] = result[i] * post	post (after)
+3	  4	      1	            6	                  6 * 1 = 6	                   1 * 4 = 4
+2	  3	      4	            2	                  2 * 4 = 8	                   4 * 3 = 12
+1	  2	      12	          1	                  1 * 12 = 12	                 12 * 2 = 24
+0	  1	      24	          1	                  1 * 24 = 24	                 24 * 1 = 24
+
+public int[] productExceptSelf(int[] nums) {
+
+        int result[] =new int[nums.length];
+        int pre = 1; int post = 1;
+        for(int i =0;i < nums.length; i++)
+        {
+            result[i] = pre;
+            pre = nums[i] * pre;
+        }
+
+        for(int i=nums.length-1;i >= 0;i--)
+        {
+            result[i] = result[i]*post;
+            post = post*nums[i];
+            
+        }
+
+        return result;
+        
+    }
