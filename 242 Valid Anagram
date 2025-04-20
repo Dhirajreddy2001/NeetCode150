@@ -1,0 +1,63 @@
+Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+
+ 
+
+Example 1:
+
+Input: s = "anagram", t = "nagaram"
+
+Output: true
+
+Example 2:
+
+Input: s = "rat", t = "car"
+
+Output: false
+
+ 
+
+Algorithm :
+Approach 1 : By using character count array to check if  s and t are same
+
+Step 1: Create a character array.
+Step 2: Start iterating through s and t to successivaly increment adn decrement thte character array.
+Step 3: Check if the character array is completely filled with 0's.
+Step 4: if yes "s" and "t" are anagrams of each other return true , if no they are not anagrams of each other return false.
+
+public boolean isAnagram(String s, String t) {
+
+        if(s.length() != t.length())
+        {
+            return false;
+        }
+        int charCnt[] = new int[26];
+
+        for(int i=0; i<s.length(); i++){
+            charCnt[s.charAt(i) - 'a']++;
+            charCnt[t.charAt(i) - 'a']--;
+        }
+        for(int i=0;i<26;i++)
+        {
+            if(charCnt[i] !=  0)
+            {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+Approach 2: By using Sorted arrays 
+
+Step 1: convert strings "s" and "t" into character arrays
+Step 2: Usig sort method sort these character arrays arrays
+Step 3: and use Array.equals method to check if they are same if yes return true else return false
+
+  public boolean isAnagram(String s, String t) {
+        char[] sChars = s.toCharArray();
+        char[] tChars = t.toCharArray();
+        
+        Arrays.sort(sChars);
+        Arrays.sort(tChars);
+        
+        return Arrays.equals(sChars, tChars);
+    }
