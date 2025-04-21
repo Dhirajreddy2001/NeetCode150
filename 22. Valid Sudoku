@@ -1,0 +1,77 @@
+Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+
+Each row must contain the digits 1-9 without repetition.
+Each column must contain the digits 1-9 without repetition.
+Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+Note:
+
+A Sudoku board (partially filled) could be valid but is not necessarily solvable.
+Only the filled cells need to be validated according to the mentioned rules.
+
+
+Few things to keep in mind:
+* The dimensions of the matrix remain same
+* We have to ensure that for the sudoku to be valid there must be no repeation in row wise, column wise and sub grid wise.
+
+Algorithm:
+Step 1: Create and Initialize 3 x 9 = 27 matrices. 9 for rows, 9 for columns and 9 for sub grids of the puzzle.
+Step 2: Get item from the board and check if it is valid number or not. If empty continue.
+Step 3: else check if the following row contains that item, check if the column contains that item and also check if the sub grid contains this item.
+Step 4: if any one condition in else proves true return false and sudoku will be invalid or else add element to row, column and grid . 
+        Condition to get grid number would be as follows box_index  = (r/3)*3+(c/3).
+)
+Step 5: Finally if none of the conditions return false return true that sudoku is valid.
+
+Code:
+
+public boolean isValidSudoku(char[][] board) {
+
+        int len = 9; //as Sudoko size is 9 x 9
+        HashSet<Character>[] rows = new HashSet[len];
+        HashSet<Character>[] cols = new HashSet[len];
+        HashSet<Character>[] boxes = new HashSet[len];
+        for (int i = 0; i < len; i++) {
+                    rows[i] = new HashSet<>();
+                    cols[i] = new HashSet<>();
+                    boxes[i] = new HashSet<>();
+            }
+
+
+        for(int row = 0; row < len; row++)
+        {
+            for(int col = 0; col < len; col++)
+            {
+                char item = board[row][col];
+
+                if(item == '.'){
+                        continue;
+                }
+
+                // checking for row
+                if(rows[row].contains(item))
+                {
+                    return false;
+                }
+                rows[row].add(item); // add if not there
+
+                 // checking for column
+                if(cols[col].contains(item))
+                {
+                    return false;
+                }
+                cols[col].add(item);  // add if not there
+
+                int box = (row / 3) * 3 + (col / 3);
+                if(boxes[box].contains(item))
+                {
+                    return false;
+                }
+                boxes[box].add(item);  // add if not there
+            }
+
+          
+        }
+
+          return true;
+        
+    }
