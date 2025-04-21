@@ -1,0 +1,48 @@
+Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,3,1]
+
+Output: true
+
+Explanation:
+
+The element 1 occurs at the indices 0 and 3.
+
+Approaches:
+
+Approach 1: Using bruteforce to iterate through the array. And check if the element is repeating . Time complexity for this would be N * N which is N^2.
+Approach 2: Using an HashSet to check if the element already exists in the set if not add element or else return decision.
+
+Using Approach 2 Algorithm:
+Step 1 : Check if the array length is 0, if yes return false.
+Step 2 : Initialize the HashSet. And Set Decision to false.
+Step 3 : Now Iterate through the array and check if the hashset has that following element if yes then there is duplicate so set decision to true and break out of the loop;
+Step 4 : If flase add this element to the hashset and continue to iterate.
+Step 5 : Return decision.
+Code:
+
+public boolean containsDuplicate(int[] nums) {
+
+        if(nums.length() == 0) return false;
+
+        HashSet HS =new HashSet<Integer>();
+        boolean dec = false;
+        for(int i : nums)
+        {
+        if(HS.contains(i))
+        {
+            dec = true;
+            break;
+        }
+        else{
+            HS.add(i);
+        }
+        }
+
+        return dec;
+        
+    }
