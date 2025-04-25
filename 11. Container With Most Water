@@ -37,7 +37,7 @@ class Solution{
       int height = Math.min(height[left], height[right];
       int area = height * width;
 
-      ma = Math.max(max_area, area);
+      max_area = Math.max(max_area, area);
 
       if(height[left] < height[right]) left++;
       else if(height[left] > height[right]) right--;
