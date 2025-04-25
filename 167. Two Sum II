@@ -1,0 +1,83 @@
+Given a 1-indexed array of integers numbers that is already sorted in non-decreasing order, find two numbers such that they add up to a specific target number. 
+Let these two numbers be numbers[index1] and numbers[index2] where 1 <= index1 < index2 <= numbers.length.
+
+Return the indices of the two numbers, index1 and index2, added by one as an integer array [index1, index2] of length 2.
+
+The tests are generated such that there is exactly one solution. You may not use the same element twice.
+
+Your solution must use only constant extra space.
+
+ 
+
+Example 1:
+
+Input: numbers = [2,7,11,15], target = 9
+Output: [1,2]
+Explanation: The sum of 2 and 7 is 9. Therefore, index1 = 1, index2 = 2. We return [1, 2]
+
+Algorithm(Two Pointers):
+
+Step 1: Initialize two variables left =0 and right = array length-1. And also initialize an array of size 2;
+Step 2: Start a while loop with condition left < right.
+Step 3: 3 conditions have to be checked in the loop.
+        a. If arr[left] + arr[right] == target.  If yes, update array with left +1 and right +1;
+        b. if arr[left] + arr[right] < target left ++;
+        c. if arr[left] + arr[right] > target right --;
+Step 4: return arr.
+
+Code:
+###Two Pointers Time complexity O(n)
+ public int[] twoSum(int[] numbers, int target) {
+        int right=numbers.length-1;
+        int left=0;
+        int sum=0;
+        int count[]=new int[2];
+        while(left < right)
+        {
+            sum = numbers[left] + numbers[right];
+            if(sum==target)
+            {
+                count[0] = left + 1;
+                count[1] = right + 1;
+                break;
+            }
+            else if(sum>target) {--right;}
+            else {++left;}
+        }
+        return count;    
+    }
+
+###Bruteforce Time Complexity: O(n^2)
+public int[] twoSum(int[] numbers, int target) {
+    for (int i = 0; i < numbers.length; i++) {
+        for (int j = i + 1; j < numbers.length; j++) {
+            if (numbers[i] + numbers[j] == target) {
+                return new int[]{i + 1, j + 1};
+            }
+        }
+    }
+    return null;
+}
+
+###Binary Search Time complexity O(n logn)
+
+public int[] twoSum(int[] numbers, int target) {
+    for (int i = 0; i < numbers.length; i++) {
+        int left = i + 1;
+        int right = numbers.length - 1;
+        int complement = target - numbers[i];
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+
+            if (numbers[mid] == complement) {
+                return new int[]{i + 1, mid + 1}; // +1 for 1-indexed
+            } else if (numbers[mid] < complement) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+    }
+    return null;
+}
