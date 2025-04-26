@@ -27,7 +27,7 @@ Step 6: Update max_length
 Step 7: after loop ends return max_length
 
 Code:
-Using hashSet
+Using HashMap
 class Solution {
     public int lengthOfLongestSubstring(String s) {
         
@@ -54,7 +54,7 @@ class Solution {
 }
 
 
-Using hashMap
+Using HashSet
 
 class Solution {
     public int lengthOfLongestSubstring(String s) {
