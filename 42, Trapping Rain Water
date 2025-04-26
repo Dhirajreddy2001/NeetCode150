@@ -1,0 +1,71 @@
+Given n non-negative integers representing an elevation map where the width of each bar is 1, compute how much water it can trap after raining.
+
+ 
+
+Example 1:
+Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
+Output: 6
+Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped.
+Example 2:
+
+Input: height = [4,2,0,3,2,5]
+Output: 9
+
+Solution:
+
+This Problem is simply the sum of water sigging in the vallies between the bars.
+Key formula is : water trapped at i = min( max_left[i],max_right[i]) - height[i]
+
+Algorithm:
+
+Step 1: Set left =0, right = array_length -1, total = 0, leftmax = array[left] , rightMax = array[right]
+Step 2: Start while loop with left< right
+Step 3: if -> check if element at array[left] < array[right], then
+                leftMax = max(leftMax, array[left])
+                check if difference of leftmax and array[left]  0
+                  add this difference to total ( total += leftMax - height[left]
+                increment left(left++)
+        else -> rightMax = maximum(rightMax, array[right])
+                check if difference of rightMax and array[right] > 0
+                 if yes add difference to total
+                increment right
+
+Step 4 Return total
+
+code:
+
+class Solution {
+    public int trap(int[] height) {
+
+        int left = 0;
+        int right = height.length - 1;
+
+        int total = 0;
+        int leftMax = height[left];
+        int rightMax = height[right];
+
+        while(left < right)
+        {
+
+            if(height[left] < height[right])
+            {
+                leftMax = Math.max(leftMax, height[left]);
+                if(leftMax - height[left] > 0)
+                {
+                    total += leftMax - height[left];
+                }
+                left++;
+            }
+            else{
+                rightMax = Math.max(rightMax, height[right]);
+                if(rightMax - height[right] > 0)
+                {
+                    total += rightMax - height[right];
+                }
+                right--;
+            }
+        }
+
+        return total;
+    }
+}
