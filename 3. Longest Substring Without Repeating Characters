@@ -27,7 +27,7 @@ Step 6: Update max_length
 Step 7: after loop ends return max_length
 
 Code:
-
+Using hashSet
 class Solution {
     public int lengthOfLongestSubstring(String s) {
         
@@ -52,3 +52,26 @@ class Solution {
         
     }
 }
+
+
+Using hashMap
+
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        Set<Character> hs = new HashSet<>();
+        int left = 0, right = 0;
+        int maxLength = 0;
+
+        while (right < s.length()) {
+            if (!hs.contains(s.charAt(right))) {
+                hs.add(s.charAt(right));
+                maxLength = Math.max(maxLength, right - left + 1);
+                right++;
+            } else {
+                hs.remove(s.charAt(left));
+                left++;
+            }
+        }
+
+        return maxLength;
+    }
