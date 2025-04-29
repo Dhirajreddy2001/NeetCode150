@@ -1,0 +1,65 @@
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+Every close bracket has a corresponding open bracket of the same type.
+ 
+
+Example 1:
+
+Input: s = "()"
+
+Output: true
+
+Example 2:
+
+Input: s = "()[]{}"
+
+Output: true
+
+Example 3:
+
+Input: s = "(]"
+
+Output: false
+
+Algorithm:
+
+Step 1: Initialize an hashmap to store key value pairs of opening closing bracket combinations
+Step 2: initialize a stack for pushing values.
+Step 3: Start loop through the string and check if the hashmap has this character if yes:  check if the stack is empty or value at the top of the stack != mapping opening charcter for the given character. if any condition turns false 'return false' else
+Step 4: if character is not in the map keys then it is a opening bracket so add it tot he map.
+Step 5: continue looping until end of the string is reached.
+Step 6: check if stack is empty if yes all the opening and clocng brackets are correctly in sync so return true or else return false.
+
+
+Code:
+  public boolean isValid(String s) {
+
+        Map<Character, Character> cMap = new HashMap<>();
+        cMap.put(')','(');
+        cMap.put('}','{');
+        cMap.put(']','[');
+
+        Stack<Character> stack = new Stack<>();
+
+        for(char c : s.toCharArray() )
+        {
+            
+            if(cMap.containsKey(c))
+            {
+                if(stack.isEmpty() || (stack.pop() != cMap.get(c)))
+                {
+                    return false;
+                }
+            }
+            else{
+                stack.push(c);
+            }
+        }
+
+        return stack.size() == 0 ? true : false;
+        
+    }
