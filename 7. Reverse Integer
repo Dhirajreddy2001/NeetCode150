@@ -1,0 +1,48 @@
+Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
+
+Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
+
+ 
+
+Example 1:
+
+Input: x = 123
+Output: 321
+Example 2:
+
+Input: x = -123
+Output: -321
+Example 3:
+
+Input: x = 120
+Output: 21
+
+Step 1:; check if x is positive or negative to get the +/- sign, and dreive absolute value(n) of x;
+Step 2: Start a loop with condition n > 0 , extract last-digit and then delete this last digit from n
+Step 3: check if reverse value is greater then MAX_VALUE of integer - last digit extracted if yes the number is greater then 32 bit so return 0 
+        else add the miltiply reverse with 10 and add temp to it.
+Step 4: return the sign and reverse number.
+
+Code:
+class Solution {
+    public int reverse(int x) {
+
+        int sign = x > 0 ? 1 : -1;
+        int n = Math.abs(x);
+        int rev = 0;
+
+        while( n > 0)
+        {   int temp = n % 10;
+            n = n / 10;
+            if( rev > (Integer.MAX_VALUE - temp)/10)
+            {
+                return 0;
+            }
+            rev = rev * 10 + temp; ;
+            
+        }
+
+        return sign * rev;
+        
+    }
+}
