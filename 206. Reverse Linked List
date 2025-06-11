@@ -1,0 +1,43 @@
+Given the head of a singly linked list, reverse the list, and return the reversed list.
+
+Ex: Input: 1->2->3->4->5
+    Output : 5->4->3->2->1
+
+Constraints:
+
+The number of nodes in the list is the range [0, 5000].
+-5000 <= Node.val <= 5000
+
+Explaination:
+Given linked list is a singly linkedlist. So, If we have n nodes a node can only know what it's successor not any other elements.
+Solution Create a new linked list and keep adding values to this list from the given lisked list until end of linkedlist i.e. null is reached
+
+Algorithm:
+
+Step 1: create and initialize a pointer rev to null
+Step 2: Start iterating over head until head != null
+        a. set temporary pointer next to the head.next.
+        b. set head.next = rev (pointing current node to the reversed part)
+        c. set rev = head (so that current node is in reversed list)
+        d. set head = next (Continue with the remaining original list.)
+Step 3: return rev ( the reversed list).
+
+Code:
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+
+        while(curr != null)
+        {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+
+        }
+
+        return prev;
+    }
+}
