@@ -34,7 +34,7 @@ public int[] twoSum(int[] nums, int target) {
                 }
         return new int[2];
     }
-Solution Approach 2( here i'm using a map which will check if he difference element is present/not and return the araay of indices):
+Solution Approach 2( here i'm using a map which will check if the difference element is present/not and return the araay of indices):
  public int[] twoSum(int[] nums, int target) {
 
         Map<Integer,Integer> map = new HashMap<>();
