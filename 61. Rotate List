@@ -6,3 +6,48 @@ K - no of times list has to be rotated from the end.
 
 Example: 1->2->3->4->5
 Output: 4->5->1->2->3
+
+
+Algo:
+Step 1: Calculate the length of the list and then normalize this list with 2 to get exact number of rotations to be made insted of rotating k unnecessary times
+        k = k % len // if we consider above example k = 2 , len = 5 k = k % len = 2/5=2
+step 2: Now initialize two pointers fast and slow to head. fast->1 , slow->1
+Step 3: First run the fast pointer for k times fast->3
+Step 4: Now Until fast.next!= null move both pointers // after iteration fast->5, slow->3
+Step 5: now fast.next will point to head which makes the list circular, head will point to slow.next and slow.next will point to null // fast.next ->1 | head -> 4(slow.next)| slow.next=null 3->null
+
+Code class Solution {
+    int getLength(ListNode head){
+        int len=0;
+        while(head!=null){
+            len++;
+            head=head.next;
+        }
+          
+        
+        return len;
+    }
+    public ListNode rotateRight(ListNode head, int k) {
+         if(head==null) return null;
+        
+        int len=getLength(head);
+        k=(k%len);
+        ListNode fast=head,slow=head;
+        while(k>0)
+        {
+            fast=fast.next;
+            k--;
+        }
+        while(fast.next!=null)
+        {
+            slow=slow.next;
+            fast=fast.next;
+        }
+        
+        fast.next=head;
+        head=slow.next;
+        slow.next=null;
+       
+        return head;
+    }
+}
