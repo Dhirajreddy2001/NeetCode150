@@ -1,0 +1,65 @@
+You are given the head of a singly linked-list. The list can be represented as:
+
+L0 → L1 → … → Ln - 1 → Ln
+Reorder the list to be on the following form:
+
+L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
+You may not modify the values in the list's nodes. Only nodes themselves may be changed.
+
+Example:Input= 1->2->3->4->null
+        Output = 1->4->2->3->null
+
+
+Algorithm:
+The problem can be first broken down to 3 parts:a) Dividing the list into 2 parts first half and second half
+                                                b) Creating Reversed list of second part
+                                                c) Merging both list1(first part) and list2(second part)
+
+Step 1: Check for edge conditions
+Step 2: Divide the list into 2 parts 1st and 2nd
+Step 3: reverse the second part
+Step 4: Merge both the lists
+
+
+Solution:
+
+class Solution {
+    public void reorderList(ListNode head) {
+        if(head == null)
+        {
+            return;
+        }
+        ListNode slow=head, fast=head;
+
+        while(fast != null && fast.next != null)
+        {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        ListNode prev = null, curr = slow,temp;
+        while(curr != null)
+        {
+            temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+
+        //curr temp list;
+
+        ListNode first = head, second = prev;
+
+        while(second.next != null)
+        {
+            temp = first.next;
+            first.next = second;
+            first = temp;
+
+            temp = second.next;
+            second.next = first;
+            second = temp;
+            
+        }
+    }
+}
