@@ -1,0 +1,55 @@
+You are given two non-empty linked lists representing two non-negative integers.
+The digits are stored in reverse order, and each of their nodes contains a single digit. 
+Add the two numbers and return the sum as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+Example:
+
+L1= 2-> 4-> 3
+L2 = 5->6->4
+
+So n1= 342
+  n2 = 465
+  So sum will be 807 and we should return 7->0->8
+
+Explaination:
+ We have to use a temp varibale that stores carry and add this carry variable in next iteration
+
+ Algorithm:
+
+Step 1: create a temporary node to store the ans 
+Step 2: Start a while loop and the condition will be l1 or l2 not equal to null or carry not equal to 0 (i.e carry will only have 1 or 0 as its values and if both the lists are null this condition carry != 0 whill stop infinate looping)
+Step 3: copy l1 and l2's current value into a temp variable then sum them with carry , calculate now carry add the value with out carry to the list, move this ans list and l1,l2 forward.
+Step 3: Finally return the ans.next node;
+
+
+
+
+Code:
+class Solution {
+    public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+        ListNode node = new ListNode(0);
+
+        ListNode ans = node;
+        int carry = 0;
+        
+        while(l1 != null || l2 != null || carry != 0)
+        {
+            int x = (l1 != null) ? l1.val : 0;
+            int y = (l2 != null) ? l2.val : 0;
+            int sum = x + y + carry;
+            carry = sum / 10;
+
+            ans.next = new ListNode(sum%10);
+            ans = ans.next;
+
+            if(l1 != null) l1 = l1.next;
+            if(l2 != null) l2 = l2.next;
+
+        }
+
+        return node.next;
+        
+    }
+}
