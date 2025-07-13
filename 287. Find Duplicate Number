@@ -1,0 +1,47 @@
+Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.
+
+There is only one repeated number in nums, return this repeated number.
+
+##  You must solve the problem without modifying the array nums and using only constant extra space. ##
+
+Solutions:
+
+One way to solve this problem is to use a hashMap and start adding elements to the HashMap and then return if the element already exists in the hashmap.
+Another way is to sort the array and then check  if succesive numbers are matching.
+But, we can't do that here as it is specified that we can use only constant extra space and not modify the array.
+
+So the best way would be using Floydd Tortoise and Hare method.
+
+First check if there is a cycle in the array, next find the starting point of the cycle . Thereby we can detect the repeated element in the array.
+
+Algorithm:
+Step 1: Initialize two pointers(fast, slow) to 0 th element of the array
+Step 2: start a do-while loop iterating over the array with slow(slow = nums[slow] pointer going one step and fast pointer going two steps fast = nums[nums[fast]] this detects if there is any loop
+Step 3: Now again set slow pointer to nums[0]
+Step 4: Now start the loop again with fast pointer and slow pointer each going one step until both the pointers match.
+Step 5: return slow pointer.
+
+Code:
+class Solution {
+    public int findDuplicate(int[] nums) {
+
+        int slow = nums[0];
+        int fast = nums[0];
+
+        do {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+    } while (slow != fast);
+
+        slow =nums[0];
+        while( slow != fast)
+        {
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+
+        return slow;
+        
+    }
+}
+
