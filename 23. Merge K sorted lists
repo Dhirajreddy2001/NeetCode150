@@ -1,0 +1,87 @@
+You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
+
+Merge all the linked-lists into one sorted linked-list and return it.
+
+ 
+
+Example 1:
+
+Input: lists = [[1,4,5],[1,3,4],[2,6]]
+Output: [1,1,2,3,4,4,5,6]
+Explanation: The linked-lists are:
+[
+  1->4->5,
+  1->3->4,
+  2->6
+]
+merging them into one sorted linked list:
+1->1->2->3->4->4->5->6
+Example 2:
+
+Input: lists = []
+Output: []
+
+
+Solution : there are several ways to solve this problem : 1. Brute Force: add all the elements from different lists to and arrayList then sort and return this sorted arrayList as linkedList
+
+Code: 
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        List<Integer> values = new ArrayList<>();
+
+        // Step 1: Extract all values
+        for (ListNode head : lists) {
+            while (head != null) {
+                values.add(head.val);
+                head = head.next;
+            }
+        }
+
+        // Step 2: Sort all values
+        Collections.sort(values);
+
+        // Step 3: Build new sorted linked list
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+
+        for (int val : values) {
+            current.next = new ListNode(val);
+            current = current.next;
+        }
+
+        return dummy.next;
+    }
+}
+
+2: minHeap priority queue: As minHeap is a self balncing data structure when ever an element is added it sorts and adjusts the elements in an ascending order.
+
+Algorithm: 
+Step 1: Create a priorityQueue
+Step 2: Add all the elements from the lists to the PQ
+Step 3: now create a dummy list merge and add elements from Pq to this List
+Step 4: return this list.'
+
+Code:
+class Solution {
+    public ListNode mergeKLists(ListNode[] lists) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        for(ListNode list: lists)
+        {
+           while(list != null)
+           {
+             minHeap.add(list.val);
+             list = list.next;
+           }
+        }
+        ListNode rv = new ListNode(1);
+        ListNode merge = rv;
+        while(!minHeap.isEmpty())
+        {
+            merge.next = new ListNode(minHeap.remove());
+            merge = merge.next;
+        }
+
+        return rv.next;
+        
+    }
+}
