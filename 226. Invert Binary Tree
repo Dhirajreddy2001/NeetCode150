@@ -1,0 +1,33 @@
+Given the root of a binary tree, invert the tree, and return its root.
+
+Solution:
+
+We can solve this problem in a recursive or iterative using Depth First Search(DFS).
+
+Algorithm(Recursion):
+Step 1: First check if the tree is valid(i.e it has elements) if it returns null return null (either tree is empty or leaf's child is reached).
+Step 2: pass right child and left child through the same invert fruntion so that they are inverted
+Step 3: append right child to left and left child to right of the root
+Step 4: Return root
+
+
+Solution:
+class Solution {
+    public TreeNode invertTree(TreeNode root) {
+
+        if(root == null)
+        {
+            return null;
+
+        }
+
+        TreeNode right = invertTree(root.right);
+        TreeNode left = invertTree(root.left);
+
+        root.left = right;
+        root.right = left;
+
+        return root;
+        
+    }
+}
