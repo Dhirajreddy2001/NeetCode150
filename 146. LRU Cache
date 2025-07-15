@@ -1,0 +1,104 @@
+Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
+
+Implement the LRUCache class:
+
+LRUCache(int capacity) Initialize the LRU cache with positive size capacity.
+int get(int key) Return the value of the key if the key exists, otherwise return -1.
+void put(int key, int value) Update the value of the key if the key exists. Otherwise, add the key-value pair to the cache. If the number of keys exceeds the capacity from this operation, evict the least recently used key.
+The functions get and put must each run in O(1) average time complexity.
+
+solution: We use two datastructures a HashMap which will store the key value pairs in the cache and doubly linkedlist to maintain the values in most recently user order
+
+Algorithm:
+Step 1: Create and intialize the Node structure and LRUCache, define hashmap in the cache method.
+Step 2: For get first check if the key is in the hashmap if no return -1
+                                                        else : create node with key, remove it from cache and insert at the head of the cache and then return node.value
+Step 3:For Put operation check if key exists in the Hashmap if yes get key , update value,remove node from cache and insert node at the head of cache.
+                                                              else if map_size == capacity remove last element from both map and cache
+                                                              else add key to hashmap and insert it at the head of the cache
+
+
+Code:
+class LRUCache {
+
+    private static class Node{
+        int key;
+        int value;
+        Node prev;
+        Node next;
+
+        public Node(int key, int value)
+        {
+            this.key = key;
+            this.value = value;
+        }
+
+    }
+
+    private final int capacity;
+    private final HashMap<Integer, Node> map;
+    private final Node head;
+    private final Node tail;
+
+
+    public LRUCache(int capacity) {
+
+        this.capacity = capacity;
+        map = new HashMap<>();
+        head = new Node(0,0);
+        tail = new Node(0,0);
+        head.next = tail;
+        tail.prev = head;
+        
+    }
+    
+    public int get(int key) {
+
+        if(!map.containsKey(key))
+        {
+            return -1;
+        }
+        Node node = map.get(key);
+        remove(node);
+        insertAtHead(node);
+        return node.value;
+        
+    }
+    
+    public void put(int key, int value) {
+        if(map.containsKey(key))
+        {
+            Node node = map.get(key);
+            node.value = value;
+            remove(node);
+            insertAtHead(node);
+        }
+        else{
+            if(map.size() == capacity)
+            {
+                map.remove(tail.prev.key);
+                remove(tail.prev);
+            }
+            Node newNode = new Node(key,value);
+            map.put(key,newNode);
+            insertAtHead(newNode);
+
+        }
+    }
+
+    private void remove(Node node)
+    {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+    private void insertAtHead(Node node)
+    {
+        node.next = head.next;
+        node.next.prev = node;
+        head.next = node;
+        node.prev = head;
+    }
+}
+
+
+
