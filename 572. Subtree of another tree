@@ -1,0 +1,80 @@
+Given the roots of two binary trees root and subRoot, return true if there is a subtree of root 
+with the same structure and node values of subRoot and false otherwise.
+
+A subtree of a binary tree is a tree that consists of a node in tree and all of this node's descendants. 
+The tree could also be considered as a subtree of itself.
+
+
+Sol: First we have to find if the root element of the given subtree is in the tree if yes then we have to check if the child nodes match to sub-tree.
+    Then there is also this condition that if sub-tree exists in the main tree, it should not have any child nodes other then the ones in sub-tree.
+
+
+Algorithm: 
+Step 1: Check if root of sub tree exists in the given main tree if yes check the child nodes.
+Step 2: Check if right child of sub tree matches with right node of root that was found in the main tree do the same with left child also
+Step 3: if both match return ture or else return false.
+
+we will have to use an additional function to run recursion 
+
+Step 4: a function called isSame(Node p , Node q):
+           check if p and q are null return true
+           check if p or q is null return false
+           then if both the p and q values are not same return false
+           else recursion condition to check child nodes of q and p
+
+
+
+
+
+
+
+
+
+code:
+class Solution {
+    public boolean isSame(TreeNode s, TreeNode t)
+    {
+        if(s == null && t == null) return true;
+        if(s == null || t == null) return false;
+
+        if(s.val != t.val)
+        {
+            return false;
+        }
+
+        return isSame(s.left,t.left) && isSame(s.right, t.right);
+    }
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+
+        if(root == null) return false;
+        if(isSame(root,subRoot))
+        {
+            return true;
+        }
+
+        return isSubtree(root.left,subRoot) || isSubtree(root.right, subRoot);
+
+
+        
+    }
+}
+
+
+Other ways to solve this problem is to push elements into the stack and check if the the sub string exists while popoing.
+or Serialize the tree into sring and check if the sub string exists.
+
+Code:
+class Solution {
+    public boolean isSubtree(TreeNode root, TreeNode subRoot) {
+        String tree1 = serialize(root);
+        String tree2 = serialize(subRoot);
+
+        return tree1.contains(tree2);
+    }
+
+    private String serialize(TreeNode node) {
+        if (node == null) return "#";
+        return "," + node.val + serialize(node.left) + serialize(node.right);
+    }
+}
+
