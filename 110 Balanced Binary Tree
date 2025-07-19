@@ -1,0 +1,50 @@
+A height-balanced binary tree is a binary tree in which the depth of the two subtrees of every node never differs by more than one.
+Given a binary tree, determine if it is height-balanced.
+
+
+
+The solution for this problem is simple using resursion calculate the heights of the left and right subtrees of the root node.
+Then check if the absolute difference between them is <= 1.
+
+Algorithm:
+Step 1: Create a function getHeight to get height of the subtrees
+                getHeight(Node node):
+                 if root height == null then return 0
+                 calculte left subtree height and right subtree height getHeight(node.right / node.left)
+                 return max of left tree height and right tree height + 1
+Step 2: in is Balanced tree function :
+            check if root is equal to null if yes return true are there is no left or right child nodes
+            check the height of left and rigth sub trees.
+            check if absolute difference of left and right sub trees is less than or equal to 1
+            then return true if both left and right are balanced or else return false 
+
+
+
+class Solution {
+    public boolean isBalanced(TreeNode root) {
+        
+        if(root == null)
+        {
+            return true;
+        }
+
+        int lH = getHeight(root.left);
+        int rH = getHeight(root.right);
+
+        if(Math.abs(lH - rH) > 1) return false;
+
+        return isBalanced(root.left) && isBalanced(root.right);
+        
+    }
+
+    private int getHeight(TreeNode node)
+    {
+        if(node == null) return 0;
+
+        int lH = getHeight(node.left);
+        int rH = getHeight(node.right);
+
+        return Math.max(rH , lH)+1;
+        
+    }
+}
