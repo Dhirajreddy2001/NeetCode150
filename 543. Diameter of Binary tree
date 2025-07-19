@@ -1,0 +1,80 @@
+Given the root of a binary tree, return the length of the diameter of the tree.
+
+The diameter of a binary tree is the length of the longest path between any two nodes in a tree. This path may or may not pass through the root.
+
+The length of a path between two nodes is represented by the number of edges between them.
+
+
+Algorithm(recursion):
+Step 1 initilize a global varible maxDiameter =0.
+Step 2: create getHeight(Node node):
+                    a. check if node is null if yes return 0 i// if height of node is null return 0
+                    b. left = getHeight(node.left)  // check height of left node
+                    c. right = getHeight(node.right) //check height of right node
+                    d. maxDiameter = Math.max(maxDiameter, (left + right))  //Diameter at current node = leftHeight + rightHeight
+                    e. return Math.max(left, right) + 1; return max of left or right sub tree plus root node of this sub tree
+Step 3: from diameterOfBinaryTree call getHeight frunction with root as parameter.
+Step 4: return maxDiameter
+
+
+
+
+
+
+
+Code:
+class Solution {
+    int maxDiameter = 0;
+
+    public int diameterOfBinaryTree(TreeNode root) {
+        getHeight(root);
+
+        return maxDiameter;
+        
+    }
+
+    public int getHeight(TreeNode Node)
+    {
+
+        if(Node == null) return 0;
+
+        int leftHeight = getHeight(Node.left);
+        int rightHeight = getHeight(Node.right);
+
+        maxDiameter = Math.max(maxDiameter, leftHeight + rightHeight);
+
+        return 1 + Math.max(leftHeight, rightHeight);
+
+    }
+}
+
+
+
+
+Bruteforce
+
+class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+        if (root == null) return 0;
+
+        // Compute height of left and right subtrees
+        int leftHeight = height(root.left);
+        int rightHeight = height(root.right);
+
+        // Compute diameter passing through this node
+        int diameterThroughRoot = leftHeight + rightHeight;
+
+        // Compute diameter in left and right subtrees
+        int leftDiameter = diameterOfBinaryTree(root.left);
+        int rightDiameter = diameterOfBinaryTree(root.right);
+
+        // Return the maximum of all three
+        return Math.max(diameterThroughRoot, Math.max(leftDiameter, rightDiameter));
+    }
+
+    // Standard recursive height function
+    private int height(TreeNode node) {
+        if (node == null) return 0;
+        return 1 + Math.max(height(node.left), height(node.right));
+    }
+}
