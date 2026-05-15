@@ -1,0 +1,43 @@
+The Logic behind this question where are series of tanks that holder rain water.
+Each tank bottom is at a different height, so each tank capacity depends on the smallest wall that is on the leftside or right side of the tank.
+We have to check how much water each tank can hold based on it's smallest adjacent wall and should return the sum of water that all th tanks can hold.
+
+Algorithm:
+
+1. Initialize the left pointer , right pointer , leftMax(highest wall from left), rightMax(max wall height from right side), and water(holdes sum of all the water)
+2. While left < right , which if left wall is smaller or right side wall is smaller(which ever side is smaller will control the water.
+3. Now  check if current hight is >= previous leftMax or rightMax 
+    if true then this will become the next leftMax or rightMax (as this is the biggest wall seen until now) .
+    else calculate water leftMax or rightMax - current height at left or right and respective pointer increments.
+4. Return water.
+
+
+Class solution{
+  public int rainWater(int[] height)
+  {
+  int left =0, right = height.length - 1;
+  int leftMax = 0, rightMax = 0, water = 0;
+
+  while(left < right)
+  {
+
+    if(height[left] < height[right])
+    {
+      if(height[left] >= leftMax) leftMax = height[left];
+      else water += leftMax - height[left];
+
+      left++;
+    }
+    else
+    {
+    if(height[right] >= rightMax) rightMax = height[right];
+    else water += rightMax - height[right];
+
+    right--;
+    }
+  }
+
+  return water;
+  }
+  }
+  
