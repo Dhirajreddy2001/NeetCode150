@@ -1,0 +1,30 @@
+An array is as input and we have to make a new array that is an copy of input array by 2 times.
+
+if input array is input 
+then: 
+     output  : input + input
+
+Input: nums = [1,2,1]
+Output: [1,2,1,1,2,1]
+
+
+Logic: we take an new array that stores the values that is double the size of orginal array. We use the % operator to get the reminder.
+       So : we iterate from i to 2n - 1 and keep adding elements in the input array to the output array  output[ i] = input [ i % n]
+
+
+Code:
+class Solution {
+    public int[] getConcatenation(int[] nums) {
+        int n = nums.length;
+
+        int[] ans = new int[ 2 * n];
+        for( int i = 0; i < (2 * n); i++)
+        {
+            ans[i] = nums[ i % n];
+        }
+
+        return ans;
+   
+        
+    }
+}
