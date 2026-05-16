@@ -1,0 +1,44 @@
+This problem asks to return the longest common prefix from the input array of strings.
+
+Logic : Use Lexicoraphical Sorting: This sorts the strings given on the basis of the common characters. So we now first and last strings in the gievn input have the least common prefix and we have to return that.
+
+
+Example:
+strs = ["flower", "flow", "flight", "flute"]
+After sorting:
+["flight", "flow", "flower", "flute"]
+
+Algorithm:
+
+Step 1: Sort the given input array
+Step 2: Initialize an empty string builder
+Step 3: Create 2 strings first and last . Where first is the first string of the array and last is alst string of the array.
+Step 4: now loop both the strings comparing characters of both the strings:
+                                    if they dont match : return the string builder
+                                    else add the character to the string builder
+Step 5: return the string builder.
+
+
+code:
+class Solution {
+    public String longestCommonPrefix(String[] strs) {
+
+        StringBuilder s= new StringBuilder();
+
+        Arrays.sort(strs);
+
+        String first = strs[0];
+        String last = strs[strs.length - 1];
+
+        for(int i =0; i < first.length(); i++)
+        {
+            if( i > last.length() || first.charAt(i) != last.charAt(i)) return s.toString();
+
+            s.append(first.charAt(i));
+
+        }
+
+        return s.toString();
+        
+    }
+}
