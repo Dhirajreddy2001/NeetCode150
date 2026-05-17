@@ -1,0 +1,33 @@
+Initialize an array of size 1000001 ~ 10^6
+Fill the values of this array with -1. We are doing this because the value in the put could be 0 ex:  pit(10, 0)
+for put array[key] = value
+for get we check if the value is not equal to -1 because this tells if value exists or not . IF exists we return value else we return -1
+for remove we set the value back to -1.
+
+class MyHashMap {
+    int[] array;
+    public MyHashMap() {
+        array = new int[1000001];
+        Arrays.fill(array, -1);
+        
+    }
+    
+    public void put(int key, int value) {
+
+        array[key] = value;
+        
+    }
+    
+    public int get(int key) {
+
+        return array[key] != -1 ? array[key] : -1;
+        
+    }
+    
+    public void remove(int key) {
+
+        array[key] = -1;
+        
+    }
+}
+
