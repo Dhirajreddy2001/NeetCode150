@@ -1,0 +1,40 @@
+We are given an array as input we can perform intialize operation or calculate sum operation for the given range.
+
+when a range is given we compute the sum of the given range.
+
+Algorithm:
+
+step 1 : Initialize step creates and array with holds prefix sums of all the elements.
+step 2 : now when ever sumRange is called we check if left index is greater then zero:
+                                                                  if true in that case we have to compute sum in the mid of the array so we have to remove prefix sum before left from prefix sum at right
+                                                                  else we return prefixSum at index right
+
+Code:
+class NumArray {
+      int[] prefix;
+
+    public NumArray(int[] nums) {
+
+        prefix = new int[nums.length];
+        int sum =0;
+
+        for(int i = 0;i< nums.length; i++)
+        {
+            sum += nums[i];
+            prefix[i] = sum;
+        }
+        
+    }
+    
+    public int sumRange(int left, int right) {
+        if( left > 0)
+        {
+          return prefix[right] - prefix[left -1];
+        }
+        else return prefix[right];
+
+
+        
+    }
+}
+
