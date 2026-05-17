@@ -1,0 +1,38 @@
+The goal is to remove all occurrences of val in-place. 
+We use a pointer k to track the position where the next valid element should be placed. 
+As we scan the array, whenever we find an element not equal to val, we copy it to nums[k] and increment k. 
+At the end, the first k elements contain all values except val, and k is returned.
+
+
+Algorithm:
+
+i tells where we are right now
+k tells where to place the good element 
+
+where good element is val != nums[i] 
+i moves through the whole array from left to right.
+k only moves when we find a value that is not equal to val.
+
+
+Step 1: initialize k at 0
+step 2: start looping from start of the array to length of the array -1 :
+            if nums[i] i.e current value is not equal to the given input val then we move this to the front of the array to position k and increamet k
+step 3: return k
+
+
+
+code:
+class Solution {
+    public int removeElement(int[] nums, int val) {
+        int k = 0;
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != val) {
+                nums[k] = nums[i];
+                k++;
+            }
+        }
+
+        return k;
+    }
+}
