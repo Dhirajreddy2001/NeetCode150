@@ -1,0 +1,86 @@
+We are given an array of size n. Our Job is to return the element that is repeating atleast n/2 times. We have to do this in linear time.
+
+
+Moore voting algorithm:
+
+we use two variables candidate and count.
+
+We maintain a candidate and a count. If count becomes 0, we choose the current element as the new candidate. 
+If the current element is the same as the candidate, we increase count. Otherwise, we decrease count. 
+Since the majority element appears more than half of the array, all other elements can cancel out some of its occurrences, but they cannot completely remove it. 
+Therefore, the remaining candidate at the end is the majority element.
+
+
+Algorithm:
+
+Step 1: Start by initializing the candidate and count to 0.
+Step 2: Start iterating the array. If count = 0 , current element becomes candidate.
+Step 3:if current element == candidate count increments or else count decrements.
+Step 4: Return the candidate.
+
+
+Code:
+
+class Solution {
+    public int majorityElement(int[] nums) {
+
+        int candidate = 0; int count =0;
+
+        for(int i =0;i < nums.length; i++)
+        {
+            if(count == 0)
+            {
+                candidate = nums[i];
+                count++;
+            }
+            else if(nums[i] != candidate) { count--;}
+            else count++;
+
+        }
+        return candidate;
+    }
+}
+
+Second Approach:
+
+Logic: As the number is repeating n/2 times when we sort the array the number comes exactly to the center of the array. 
+
+
+Algorithm:
+Step 1: First sort the input array.
+Step 2: Return the element at position n/2 in the array.
+
+Solution:
+class Solution {
+    public int majorityElement(int[] nums) {
+
+        Arrays.sort(nums);
+
+        return nums[nums.length/2];
+        
+    }
+}
+
+Apparoach 2 :
+
+Take a hashmap that stores number and its apperences. For every repeated number increase its apprience count. Once done return the number that is repeating n/2 times.
+
+class Solution {
+    public int majorityElement(int[] nums) {
+        int n = nums.length;
+        Map<Integer, Integer> map = new HashMap<>();
+        
+        for (int i = 0; i < n; i++) {
+            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+        }
+        
+        n = n / 2;
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (entry.getValue() > n) {
+                return entry.getKey();
+            }
+        }
+        
+        return 0;
+    }
+}
