@@ -1,0 +1,36 @@
+This is problem is 2d version of the Range Sum query Immutable
+
+the idea is:
+            we have to calculate a prefix array that will store the values of prefix sums of the whole given input. this prefix array will be (m+1)(n+1 ) in dimensions.
+            condition for creation prefix sum for each cell : current + left + top - overlap
+            condition for returning sum for a given rectangle dimensions: total_area - left_extra - top_extra + overlap
+
+
+solution :
+
+class NumMatrix{
+
+    int[][] prefix;
+
+    public NumMatrix(int[][] matrix)
+    {
+        int m = matrix.length;
+        int n = matrix.length;
+
+        for(int i =0;i<m; i++)
+        {
+         for(int j=0;j<n;j++)
+           {
+             prefix[i+1][j+1] = matrix[i][j] + prefix[i+1][j]+prefix[i][j+1] - prefix[i][j];
+              // current      =  matrix_current + sum left + sum above - overlap
+
+            }
+        }
+      }
+
+       public int sumRegion(int row1, int col1, int row2, int col2) {
+
+        return prefix[row2+1][col2+1] - prefix[row1][col2+1] - prefix[row2 + 1][col1] + prefix[row1][col1];
+        
+    }
+}
