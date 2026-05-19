@@ -1,0 +1,32 @@
+We first sort the array and them use map to find the number of occurrences. Then we calculate Majority value. then we interate through the map to find the values and add them to list.
+
+
+Code:
+class Solution {
+    public List<Integer> majorityElement(int[] nums) {
+
+        if(nums.length == 0) return new ArrayList<Integer>();
+        Arrays.sort(nums);
+        HashMap<Integer, Integer> map = new HashMap<>();
+
+        for(int i =0 ; i<nums.length; i++)
+        {
+             map.put(nums[i], map.getOrDefault(nums[i],0)+1);
+        }
+        int majority = nums.length / 3;
+
+        List<Integer> list = new ArrayList<>();
+
+        for(int num : map.keySet())
+        {
+            if(map.get(num) > majority)
+            {
+                list.add(num);
+            }
+        }
+
+        return list;
+
+        
+    }
+}
