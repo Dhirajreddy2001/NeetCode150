@@ -1,0 +1,35 @@
+This problme can be solved with brute force / sliding window/ prefix sums.
+
+Here we are using prefix sums approach.
+
+We use a hash map to store how many times this prefix has repeated and use this to calculated the total no of sub arrays that can form K
+For each index, we calculate the running prefix sum current. 
+Then we calculate current - k to check whether we have seen an older prefix sum that can be removed to make the current subarray sum equal to k. 
+After checking, we store/update the current prefix sum in the map because it may be needed for future subarrays.
+
+
+class solution{
+    public int subArraySum(int[] nums, int k)
+    {
+
+    int current = 0;
+    int result = 0;
+
+    Map<Integer, Integer> prefixSums = new HashMap<>();
+
+    prefixSums.add(0,1); //we have already seen zero sum once
+
+    for( int i : nums)
+    {
+      current += i;
+      int diff = current - k;
+
+      //now we calculate the result i.e. no of times this could have appeared
+      result  += prefixSums.getOrDefault(diff,  0);
+
+      prefixSum.put(current, prefixSum.getOrDefault(current , 0)+1);
+
+      }
+
+      return result;
+      }
