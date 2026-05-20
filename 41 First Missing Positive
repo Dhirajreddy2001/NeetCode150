@@ -1,0 +1,31 @@
+This problem asks to find the first missing positive number that is least in the given input array.
+
+Input: nums = [1,2,0]
+Output: 3
+Explanation: The numbers in the range [1,2] are all in the array.
+
+
+Intution:  Least possible positive integer is 1.
+We start going through the elements of the array keeping this in mind if number is less then 1 we go to next number , if it equals to the current number (n) we increment n at last we return n.
+
+
+Algorithm:
+Step 1: We initialize the variable n with n =1
+Step 2: We start iterating if i == n we increment n or else we continue iteration
+Step 3: Return n
+
+
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+
+        Arrays.sort(nums);
+        int n = 1;
+        for(int i : nums)
+        {   
+            if( i == n) n++;
+        }
+
+        return n;
+        
+    }
+}
