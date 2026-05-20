@@ -9,7 +9,7 @@ Step 2: while left < right , we  store array[left] in a temp variable and swap a
 class Solution {
     public void reverseString(char[] s) {
 
-        int left =0, right = s.length-1;
+        int left =0, right = s.length-1; 
 
         while(left<right)
         {
