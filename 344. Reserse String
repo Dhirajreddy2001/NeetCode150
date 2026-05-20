@@ -1,0 +1,25 @@
+We are given a input string, we have to reverse it with out duplicating it.
+
+We use two pointers(left and right) and a temporary variable.
+
+Algorithm:
+Step 1: Initialize left =0 and right = input_array_length-1
+Step 2: while left < right , we  store array[left] in a temp variable and swap array[left] with array[right] and array[left] with temp
+
+class Solution {
+    public void reverseString(char[] s) {
+
+        int left =0, right = s.length-1;
+
+        while(left<right)
+        {
+            char temp = s[left];
+
+            s[left] = s[right];
+            s[right] = temp;
+            left++;
+            right--;
+        }
+        
+    }
+}
