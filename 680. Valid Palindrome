@@ -1,0 +1,35 @@
+Use two pointers, one at the start and one at the end of the string. Move both pointers inward while the characters are equal. 
+If a mismatch is found, try skipping either the left character or the right character and check whether the remaining substring is a palindrome.
+If either check is true, return true. If no mismatch is found, return true because the string is already a palindrome.
+
+class Solution {
+    public boolean validPalindrome(String s) {
+        int left = 0;
+        int right = s.length() - 1;
+
+        while (left < right) {
+            if (s.charAt(left) == s.charAt(right)) {
+                left++;
+                right--;
+            } else {
+                return isPalindrome(s, left + 1, right) ||
+                       isPalindrome(s, left, right - 1);
+            }
+        }
+
+        return true;
+    }
+
+    private boolean isPalindrome(String s, int left, int right) {
+        while (left < right) {
+            if (s.charAt(left) != s.charAt(right)) {
+                return false;
+            }
+
+            left++;
+            right--;
+        }
+
+        return true;
+    }
+}
