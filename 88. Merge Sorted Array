@@ -1,0 +1,96 @@
+Algorithm for Merge Sorted Array using auxiliary array:
+Create a new array arr of size m + n.
+Use three pointers:
+i = 0   // pointer for nums1
+j = 0   // pointer for nums2
+k = 0   // pointer for arr
+Compare values from both arrays while both pointers are valid:
+while i < m and j < n
+If nums1[i] is smaller or equal, put it into arr[k] and move i.
+Otherwise, put nums2[j] into arr[k] and move j.
+After placing one value into arr, always move k.
+If any elements are left in nums1, copy them into arr.
+If any elements are left in nums2, copy them into arr.
+Finally, copy all elements from arr back into nums1.
+
+class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        
+        int len = m + n;
+        int[] arr = new int[len];
+
+        int i = 0;
+        int j = 0;
+        int k = 0;
+
+        while (i < m && j < n) {
+            if (nums1[i] <= nums2[j]) {
+                arr[k] = nums1[i];
+                i++;
+            } else {
+                arr[k] = nums2[j];
+                j++;
+            }
+
+            k++;
+        }
+
+        while (i < m) {
+            arr[k] = nums1[i];
+            i++;
+            k++;
+        }
+
+        while (j < n) {
+            arr[k] = nums2[j];
+            j++;
+            k++;
+        }
+
+        for (int x = 0; x < m + n; x++) {
+            nums1[x] = arr[x];
+        }
+    }
+}
+
+
+Create a new array of size m + n. 
+Use two pointers to compare values from nums1 and nums2. Add the smaller value into the new array. 
+After one array finishes, copy the remaining values. Finally, copy the result back into nums1.
+
+class Solution {
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int[] result = new int[m + n];
+
+        int i = 0; // pointer for nums1
+        int j = 0; // pointer for nums2
+        int k = 0; // pointer for result
+
+        while (i < m && j < n) {
+            if (nums1[i] <= nums2[j]) {
+                result[k] = nums1[i];
+                i++;
+            } else {
+                result[k] = nums2[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < m) {
+            result[k] = nums1[i];
+            i++;
+            k++;
+        }
+
+        while (j < n) {
+            result[k] = nums2[j];
+            j++;
+            k++;
+        }
+
+        for (int x = 0; x < m + n; x++) {
+            nums1[x] = result[x];
+        }
+    }
+}
