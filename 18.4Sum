@@ -1,0 +1,65 @@
+This problem is a combination of Two Sum 2 and 3 Sum.
+
+Similar to 3 Sum we will have two values fixed and then we iterate using two pointers to get the other two digits that when added to the 2 static numbers adds up to the target.
+
+
+Algorithm :
+
+
+Step 1 : We check if the array size is greater then 3 so that we can form atleast one valid  quadruplet. if no we return empty list.
+Step 2:  We start looping with 2 values fixed so we start first for loop at i = 0 and goes to array_length - 3 and second loop for j = i +1 and goes to array_length-2.
+Step 3: Now we use two pointers left = j +1 and right = array_length-1. And start calculating the sum to compare with the target. If it matches we add the quadruplets to the list. 
+Step 4: We return the list.
+
+Code:
+class Solution {
+    public List<List<Integer>> fourSum(int[] nums, int target) {
+
+        if(nums.length < 4) return new ArrayList<>();
+
+        List<List<Integer>> list = new ArrayList<>();
+
+
+        Arrays.sort(nums);
+
+        for(int i =0; i<nums.length-3; i++)
+        {
+            if(i>0 && nums[i] == nums[i-1]) continue;
+            for(int j = i +1; j< nums.length -2; j++)
+            {
+                if(j > i+1 && nums[j] == nums[j-1]) continue;
+
+                int left = j +1; int right = nums.length-1;
+
+                while(left < right)
+                {
+                    long sum =(long) nums[i] + nums[j] + nums[left] + nums[right];
+
+                    if(sum == target)
+                    {
+                        list.add(Arrays.asList(nums[i], nums[j], nums[left], nums[right]));
+
+                        while(left < right && nums[left] == nums[left+1]) left++;
+                        while(left < right && nums[right] == nums[right-1]) right--;
+
+                        left++;
+                        right--;
+                    }
+                    else if(sum < target)
+                    {
+                        left++;
+                    }
+                    else{
+                        right--;
+                    }
+
+                }
+            }
+        }
+
+        return list;
+
+
+        
+    }
+}
