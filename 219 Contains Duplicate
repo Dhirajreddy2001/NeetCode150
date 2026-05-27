@@ -1,0 +1,52 @@
+This questions asks to find if duplicated exist in an array. But the condition is if we find duplicated we only return if the difference of their indices is lessthan given input.
+
+We can do this using a Hash-Map and also Set.
+
+For general approach we use hashmap:
+code:
+class Solution {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+
+       Map<Integer, Integer> map = new HashMap<>();
+
+       for(int i =0; i<nums.length; i++)
+       {
+        if(map.containsKey(nums[i]))
+        {
+            int lastIndex = map.get(nums[i]);
+
+            if(i - lastIndex <= k) return true;
+        }
+
+        map.put(nums[i], i);
+       }
+
+       return false;
+        
+    }
+}
+
+
+For Sliding Window Approach we use set:
+class Solution {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+
+      Set<Integer> set = new HashSet<>();
+
+      for(int i =0; i<nums.length; i++)
+      {
+        if(set.contains(nums[i])) return true;
+           
+           
+        set.add(nums[i]);
+
+        if(set.size() > k)
+        {
+            set.remove(nums[i-k]);
+        }
+     
+      }
+
+      return false;
+    }
+}
