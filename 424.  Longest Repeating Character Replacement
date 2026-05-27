@@ -1,5 +1,17 @@
 Sliding Window
 
+Algorithm
+Create an array occ[26] to store the frequency of each uppercase character in the current window.
+Set:
+left = 0
+maxOcc = 0
+ans = 0
+Move right from 0 to the end of the string.
+For every right, add s.charAt(right) to the frequency array.
+Update maxOcc, which stores the highest frequency of a single character in the current window.
+Calculate how many characters need replacement:
+
+
 
 class Solution {
     public int characterReplacement(String s, int k) {
