@@ -1,0 +1,55 @@
+This problem is similar to sub strings.
+We can use two maps to check if the first string exists in the second string, using sliding window as well as helper function that checks if the mapping of s1 matches ith mapping of s2.
+
+
+Code:
+
+class Solution {
+    public boolean checkInclusion(String s1, String s2) {
+
+        if(s1.length() > s2.length()) return false;
+
+        int[] s1_map = new int[26];
+        int[] window = new int[26];
+
+        for(int i=0; i<s1.length();i++)
+        {
+            s1_map[s1.charAt(i) - 'a']++;
+        }
+
+        int left =0;
+
+        for(int right=0; right < s2.length(); right++)
+        {
+            window[s2.charAt(right) - 'a']++;
+
+            if(right - left + 1 > s1.length())
+            {
+                window[s2.charAt(left) - 'a']--;
+                left++;
+            }
+
+            if(matches(s1_map, window))
+            {
+                return true;
+            }
+        }
+
+        return false;
+        
+    }
+    public boolean matches(int[] a, int[] b)
+    {
+        boolean dec = true;
+
+        for(int i=0; i<26; i++)
+        {
+            if(a[i] != b[i])
+            {
+                dec = false;
+            }
+        }
+
+        return dec;
+    }
+}
