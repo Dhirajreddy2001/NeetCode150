@@ -1,0 +1,42 @@
+Explaination: you are given an array and a target , find the least length sub set in the array which  sums up to the target.
+
+
+Algorithm:
+
+Step 1: If array length == 0 return 0;
+Step 2: left left , sum , minLength be 0;
+Step 3: start the for loop with right = 0 and goes up to the length of the input array:
+                  sum = sum + current index of the input array
+                  when sum >= target:
+                        we compute min length  =  min(minlength, right - left +1
+                         remove the left most number from the window from the sum and increment the left element
+Step 4: Return the minLength
+
+
+
+Code:
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+
+        if(nums.length == 0) return 0;
+
+        int left =0;
+        int num = 0;
+        int sum = 0;
+        int minLength = Integer.MAX_VALUE;
+        for(int right =0 ; right < nums.length; right++)
+        {
+            sum += nums[right];
+
+            while(sum >= target)
+            {
+                minLength = Math.min(minLength, right - left +1);
+
+                sum -= nums[left];
+                left++;
+            }
+        }
+        
+        return minLength == Integer.MAX_VALUE ? 0 : minLength;
+    }
+}
