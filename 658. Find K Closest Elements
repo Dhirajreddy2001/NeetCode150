@@ -1,0 +1,88 @@
+We are given sorted integer array and two integers k and x. We have to return k closest elements to x in the given array.
+
+Please look at optimal solution
+
+Algorithm (easiest solution):
+Step 1: We use two pointers left and right. left will start at 0 and right will start at arr_length-1
+Step 2: while right - left + 1 > k:
+                then if | arr[left] - x | > | arr[right] - x| then left difference is greater so we move left towards right
+                else right difference is greater then or equal to left so we move left
+Step 3: Here We add the window elements to the list
+Step 4: We return the list.
+
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+
+        int left = 0;
+        int right = arr.length - 1;
+
+        while(right - left + 1 > k)
+        {
+            if(Math.abs(arr[left]-x) > Math.abs(arr[right]-x))
+            {
+                left++;
+            }
+            else right--;
+
+        }
+
+        List<Integer> result = new ArrayList<>();
+
+        for(int i = left; i<=right; i++)
+        {
+            result.add(arr[i]);
+        }
+        
+        return result;
+    }
+}
+
+Time complexity : O(n - k) and space complexity is O(1)
+
+
+Optimal solution:
+For this we use two pointers with binary search.
+
+Step 1: Left  =0,  right = array_length - k.  
+        Why we are doing array-length - k is left and right are possible starting indexes so for right = array_left -1 may not always fit the window size of k.
+Step 2: now loop starts at left and goes until right
+          now calcualte mid , mid = left + (right - left)/2
+
+          if x - arr[mid] > arr[mid + k] - x  in this case arr[mid] is left most element in the current window and arr[mid+k] is next element after the window
+          so if left is greather difference then next element out of the window then we move right so left = mid +1
+          else if left is smaller or equal we move left , so right = mid      in equal case we are moving left as problem prefers that
+
+Step 3: we make window into the list with loops starting at left and going to left + k
+Step 4: Return the list.
+
+Solution:
+
+
+class Solution {
+    public List<Integer> findClosestElements(int[] arr, int k, int x) {
+
+        int left = 0;
+        int right = arr.length - k;
+
+        while(left < right)
+        {
+            int mid = left + (right - left)/2;
+
+            if(x - arr[mid] > arr[mid + k] - x)
+            {
+                left = mid + 1;
+            }
+            else right = mid;
+
+        }
+
+        List<Integer> result = new ArrayList<>();
+
+        for(int i = left; i< left + k ; i++)
+        {
+            result.add(arr[i]);
+        }
+        
+        return result;
+    }
+}
