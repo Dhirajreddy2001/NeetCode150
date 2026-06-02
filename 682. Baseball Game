@@ -1,0 +1,42 @@
+Given an input array of operations we perform them and finally we return the sum of the elements of the satck.
+
+Algorithm:
+Step 1: For s in array:
+                  if s == + : top = stack.pop and newSum = top + stack.peek() stack.push(top), stack.push(numSum)
+                  else if s == "D" stack.push(stack.peek() *2)
+                  else if s == "C" stack.pop()
+                  else stack.push(Integer.parseInt(s))
+Step 2: sum =0
+Step 3: while stack is not empty  pop stack and add it to sum
+Step 4: return sum
+
+Code:
+class Solution {
+    public int calPoints(String[] operations) {
+
+        Deque<Integer> stack = new ArrayDeque<>();
+
+        for(String s: operations)
+        {
+            if(s.equals("+"))
+            {
+                int top = stack.pop();
+                int newScore = top + stack.peek();
+
+                stack.push(top);
+                stack.push(newScore);
+            }
+            else if(s.equals("D")) stack.push(stack.peek() * 2);
+            else if(s.equals("C")) stack.pop();
+            else stack.push(Integer.parseInt(s));
+        }
+        int sum =0;
+        while(!stack.isEmpty())
+        {
+            sum += stack.pop();
+        }
+
+        return sum;
+        
+    }
+}
