@@ -1,0 +1,69 @@
+We are given an array of integers with condition that if 2 integers are travelling in opposite direstion they collide.
+so if given input = [-1 , 1] both of these are travelling in opposite direction so they collide at some point. Note All asteriods travel with same speed.
+
+When a pair of astroids collide there are two scenarios that can happen 
+
+if both are of same size then they explode
+if one is bigger and one is smaller , smaller one will explode.
+
+
+
+Algorithm:
+
+Step 1: Initialize a stack
+Step 2: start looping through the input array:
+                      Check if stack is empty and if top of the stack > 0 and if asteroid > 0
+                          if(top of stack is less then absolute value of asteroid: the pop stack as smaller one is destroid
+                          else if both are equal then both are destroid break out
+                          else current asteroid is smaller so it explodes
+            if asteroid is not destroid add it to the stack
+step 3: add the stack backwards to the array 
+step 4: return the result array.
+
+
+import java.util.*;
+
+class Solution {
+    public int[] asteroidCollision(int[] asteroids) {
+
+        Stack<Integer> stack = new Stack<>();
+
+        for (int asteroid : asteroids) {
+
+            boolean destroyed = false;
+
+            while (!stack.isEmpty() && stack.peek() > 0 && asteroid < 0) {
+
+                if (stack.peek() < Math.abs(asteroid)) {
+                    // Stack top asteroid is smaller, so it explodes.
+                    stack.pop();
+                } 
+                else if (stack.peek() == Math.abs(asteroid)) {
+                    // Both asteroids explode.
+                    stack.pop();
+                    destroyed = true;
+                    break;
+                } 
+                else {
+                    // Current asteroid explodes.
+                    destroyed = true;
+                    break;
+                }
+            }
+
+            // Push only if the current asteroid survived.
+            if (!destroyed) {
+                stack.push(asteroid);
+            }
+        }
+
+        int[] result = new int[stack.size()];
+
+        // Stack pops in reverse order, so fill result from right to left.
+        for (int i = result.length - 1; i >= 0; i--) {
+            result[i] = stack.pop();
+        }
+
+        return result;
+    }
+}
