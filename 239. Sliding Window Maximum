@@ -1,0 +1,70 @@
+Given an array and window size we have to return the maximum element in all the possible windows.
+
+Algorithm
+We need to find the maximum value in every window of size k.
+Instead of checking every window manually, we maintain a deque that stores indexes of useful elements.
+The deque is maintained in such a way that:
+nums[deque[0]] is always the maximum of the current window
+Steps
+If the array is empty or invalid, return an empty array.
+Create a result array of size:
+n - k + 1
+Because that is the number of windows of size k.
+Create a deque to store indexes.
+Iterate through the array using index i.
+Remove indexes from the front if they are outside the current window.
+while(!deque.isEmpty() && deque.peek() < i - k + 1)
+This means the index at the front is no longer inside the window.
+Remove indexes from the back while their values are smaller than the current value.
+while(!deque.isEmpty() && nums[deque.peekLast()] < nums[i])
+Why?
+Because smaller values behind the current value will never become maximum while the current value is still in the window.
+Add the current index to the deque.
+deque.offer(i);
+Once we have processed at least k elements, store the maximum.
+if(i >= k - 1)
+The maximum is always at the front of the deque:
+result[i - k + 1] = nums[deque.peek()];
+Return the result.
+
+
+Code:
+
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+
+        if(nums == null || nums.length == 0 || k < 0)
+        {
+            return new int[0];
+        }
+
+        int n = nums.length;
+
+        int[] result = new int[n - k + 1];
+
+        Deque<Integer> deque = new LinkedList<>();
+
+        for(int i=0; i<n; i++)
+        {
+            while(!deque.isEmpty() && deque.peek() < i - k + 1)
+            {
+                deque.poll();
+            }
+
+            while(!deque.isEmpty() && nums[deque.peekLast()] < nums[i])
+            {
+                deque.pollLast();
+            }
+
+            deque.offer(i);
+
+            if(i >= k - 1)
+            {
+                result [i-k+1] = nums[deque.peek()];
+            }
+        }
+
+        return result;
+        
+    }
+}
