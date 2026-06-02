@@ -1,0 +1,63 @@
+We are to define and implement the queue behaviour using stacks.
+
+Queue behavior is first-in-first-out(fifo) and stack behaviour is las-in-first-out. So we use two stacks one is input stack which will store the stack behavior and
+then we pop values into the other stack which will reverse the first stack to provide queue behavior.
+
+
+["MyQueue", "push", "push", "peek", "pop", "empty"]
+[[], [1], [2], [], [], []]
+Output
+[null, null, null, 1, 1, false]
+
+Code:
+class MyQueue {
+
+    Stack<Integer> input;
+    Stack<Integer> output;
+
+    public MyQueue() {
+        
+        input = new Stack<>();
+        output = new Stack<>();
+    }
+    
+    public void push(int x) {
+        input.push(x);
+    }
+    
+    public int pop() {
+
+        peek();
+        return output.pop();
+        
+    }
+    
+    public int peek() {
+
+        if(output.isEmpty())
+        {
+            while(!input.isEmpty())
+            {
+                output.push(input.pop());
+            }
+
+            
+        }
+        return output.peek();
+
+    }
+    
+    public boolean empty() {
+        
+        return input.isEmpty() && output.isEmpty();
+    }
+}
+
+/**
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue obj = new MyQueue();
+ * obj.push(x);
+ * int param_2 = obj.pop();
+ * int param_3 = obj.peek();
+ * boolean param_4 = obj.empty();
+ */
