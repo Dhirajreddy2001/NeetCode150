@@ -1,0 +1,41 @@
+We are given an input elements, our job is to find the index when the price was less then equal to the current index. Ad we return such indexs for all the 
+elemenets of the array.
+
+
+Algorithm:
+Step 1: initialise a stack which will track previous index value and its span 
+step 2: for every input next(int price):
+                      check if stack is not empty and price < stack.peek()[0]// which is previous price
+                      if true then sum current span with previous index span and pop the previous index number as it is less then current  price
+                      add the current input price and its span to the stack
+                      return the span
+
+
+code:
+class StockSpanner {
+
+    Stack<int[]> track;
+    public StockSpanner() {
+        
+        track = new Stack<>();
+    }
+    
+    public int next(int price) {
+        int span = 1;
+        while(!track.isEmpty() && price >= track.peek()[0])
+        {
+            span += track.peek()[1];
+            track.pop();
+        }
+
+        track.push(new int[]{price, span} );
+
+        return span;
+    }
+}
+
+/**
+ * Your StockSpanner object will be instantiated and called as such:
+ * StockSpanner obj = new StockSpanner();
+ * int param_1 = obj.next(price);
+ */
