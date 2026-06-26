@@ -1,0 +1,56 @@
+We are given a linked list data structure which will hold next [ value, next, random] : where next points to next element and random points to a random element in the list / null.
+Our job is the arrive at the list that will have its next and random pointers pointing to the given input.
+
+
+If this original node already has a copy, use that copy.
+Do not create another duplicate node.
+
+
+Idea:
+We need to create a deep copy of a linked list where each node has two pointers:
+1. next
+2. random
+
+The problem is that random can point to any node, even a node that was already copied or a node that appears later.
+
+So we use a HashMap to store the mapping:
+
+original node -> copied node
+
+This helps us avoid creating duplicate copies of the same node.
+
+Whenever we visit a node:
+- If it is null, return null.
+- If it is already copied, return the copied node from the map.
+- Otherwise, create a new copy.
+- Store original -> copy in the map.
+- Recursively copy its next pointer.
+- Recursively copy its random pointer.
+- Return the copied node.
+
+
+Code:
+
+class Solution {
+
+    HashMap<Node, Node> visitedNode = new HashMap<>();
+    public Node copyRandomList(Node head) {
+
+        if(head == null) return null;
+
+        if(this.visitedNode.containsKey(head))
+        {
+            return this.visitedNode.get(head);
+        }
+
+        Node node = new Node(head.val, null, null);
+
+        this.visitedNode.put(head, node);
+
+        node.next = copyRandomList(head.next);
+        node.random = copyRandomList(head.random);
+
+        return node;
+         
+    }
+}
