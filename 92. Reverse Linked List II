@@ -1,0 +1,47 @@
+We are given a linkedlist as input and left and right we have to reverse the nodes that are between left and right. 
+
+Solution Approach:
+
+First we take a dummy node and interate until left ( i = 0 to left -1 )
+Then we use Reverse linked list technique to reverse elements in the list from left  to right - left + 1
+Then once reverse is done we merge it with the original sequence.
+Now we return the dummy.next.
+
+
+
+class Solution {
+    public ListNode reverseBetween(ListNode head, int left, int right) {
+
+
+        ListNode dummy = new ListNode(0);
+
+        dummy.next = head;
+
+        ListNode beforeSublist = dummy;
+
+        for(int i = 0; i < left - 1 ; i++)
+        {
+            beforeSublist = beforeSublist.next;
+        }
+
+
+        
+        ListNode curr = beforeSublist.next;
+        ListNode prev = null;
+
+        for(int i =0; i < right - left + 1; i++)
+        {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+
+        beforeSublist.next.next = curr;
+        beforeSublist.next = prev;
+
+        return dummy.next;
+
+
+    }
+}
