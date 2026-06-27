@@ -1,0 +1,607 @@
+
+
+class LFUCache {
+    class Node{
+    int key;
+    int value;
+    int freq;
+    Node prev;
+    Node next;
+
+    public Node(int key , int value)
+    {
+        this.key = key;
+        this.value = value;
+        this.freq = 1;
+    }
+
+    }
+
+    class DoublyLinkedList
+    {
+        Node head;
+        Node tail;
+        int size;
+
+        public DoublyLinkedList()
+        {
+            head = new Node(0,0);
+            tail = new Node(0,0);
+            head.next = tail;
+            tail.prev = head;
+            size = 0;
+        }
+
+        public void addToHead(Node node)
+        {
+            node.next = head.next;
+            node.prev = head;
+            head.next.prev= node;
+            head.next = node;
+            size++;
+        }
+
+        public void remove(Node node)
+        {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+            size--;
+        }
+
+        public Node removeTail()
+        {
+            if(size == 0) return null;
+
+            Node node = tail.prev;
+            remove(node);
+            return node;
+        }
+    }
+
+    int capacity;
+    int minFreq;
+    Map<Integer, Node> nodeMap;
+    Map<Integer, DoublyLinkedList> freqMap;
+
+
+    public LFUCache(int capacity) {
+
+        this.capacity = capacity;
+        this.minFreq = 0;
+        this.nodeMap = new HashMap<>();
+        this.freqMap = new HashMap<>();
+        
+    }
+    
+    public int get(int key) {
+
+        if(!nodeMap.containsKey(key)) return -1;
+
+        Node node= nodeMap.get(key);
+        updateFrequency(node);
+        return node.value;
+        
+    }
+    
+    public void put(int key, int value) {
+
+        if(capacity == 0) return;
+
+        if(nodeMap.containsKey(key))
+        {
+            Node node = nodeMap.get(key);
+            node.value = value;
+            updateFrequency(node);
+            return ;
+        }
+
+        if(nodeMap.size() == capacity)
+        {
+            DoublyLinkedList minFreqList = freqMap.get(minFreq);
+            Node removeNode = minFreqList.removeTail();
+            nodeMap.remove(removeNode.key);
+        }
+        Node newNode = new Node(key, value);
+        nodeMap.put(key, newNode);
+        freqMap.computeIfAbsent( 1, k -> new DoublyLinkedList()).addToHead(newNode);
+
+        minFreq = 1;
+    }
+
+    public void updateFrequency(Node node)
+    {
+        int oldFreq = node.freq;
+
+        DoublyLinkedList oldList = freqMap.get(oldFreq);
+        oldList.remove(node);
+
+        if(oldFreq == minFreq && oldList.size == 0)
+        {
+            minFreq++;
+        }
+
+        node.freq++;
+
+        freqMap.computeIfAbsent(node.freq, k -> new DoublyLinkedList())
+                .addToHead(node);
+    }
+}
+
+
+
+
+# LFU Cache Algorithm and Code Explanation
+
+## LFU Cache Idea
+
+LFU means:
+
+```text
+Least Frequently Used
+```
+
+When the cache is full, we remove the key that was used the least number of times.
+
+If two keys have the same frequency, we remove the least recently used key among them.
+
+So LFU Cache needs to track two things:
+
+```text
+1. Frequency count
+2. Recent order inside the same frequency
+```
+
+---
+
+## Data Structures Used
+
+We use:
+
+```java
+Map<Integer, Node> nodeMap;
+```
+
+This stores:
+
+```text
+key -> actual node
+```
+
+So we can get any key in `O(1)` time.
+
+We also use:
+
+```java
+Map<Integer, DoublyLinkedList> freqMap;
+```
+
+This stores:
+
+```text
+frequency -> list of nodes with that frequency
+```
+
+Example:
+
+```text
+freq = 1: head <-> 5 <-> 2 <-> tail
+freq = 2: head <-> 4 <-> tail
+freq = 3: head <-> 1 <-> tail
+```
+
+Inside each frequency list:
+
+```text
+head side = most recently used
+tail side = least recently used
+```
+
+We also keep:
+
+```java
+int minFreq;
+```
+
+This stores the lowest frequency currently present in the cache.
+
+When the cache is full, we remove from:
+
+```java
+freqMap.get(minFreq).removeTail();
+```
+
+---
+
+# Algorithm
+
+## get(key)
+
+```text
+1. If key is not present:
+   return -1.
+
+2. Get the node from nodeMap.
+
+3. Since this key is used now, increase its frequency:
+   - Remove it from its old frequency list.
+   - If old frequency was minFreq and the old list becomes empty,
+     increase minFreq.
+   - Increase node.freq.
+   - Add node to the head of the new frequency list.
+
+4. Return node.value.
+```
+
+---
+
+## put(key, value)
+
+```text
+1. If capacity is 0:
+   return.
+
+2. If key already exists:
+   - Update node.value.
+   - Increase its frequency using updateFrequency().
+   - Return.
+
+3. If cache is full:
+   - Go to freqMap.get(minFreq).
+   - Remove the tail node from that list.
+   - Remove that node's key from nodeMap.
+
+4. Create a new node with freq = 1.
+
+5. Add it to nodeMap.
+
+6. Add it to freqMap.get(1).
+
+7. Set minFreq = 1.
+```
+
+---
+
+# Full Code
+
+```java
+class LFUCache {
+
+    class Node {
+        int key;
+        int value;
+        int freq;
+        Node prev;
+        Node next;
+
+        public Node(int key, int value) {
+            this.key = key;
+            this.value = value;
+            this.freq = 1;
+        }
+    }
+
+    class DoublyLinkedList {
+        Node head;
+        Node tail;
+        int size;
+
+        public DoublyLinkedList() {
+            head = new Node(0, 0);
+            tail = new Node(0, 0);
+
+            head.next = tail;
+            tail.prev = head;
+
+            size = 0;
+        }
+
+        public void addToHead(Node node) {
+            node.next = head.next;
+            node.prev = head;
+
+            head.next.prev = node;
+            head.next = node;
+
+            size++;
+        }
+
+        public void remove(Node node) {
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
+
+            size--;
+        }
+
+        public Node removeTail() {
+            if (size == 0) return null;
+
+            Node node = tail.prev;
+            remove(node);
+
+            return node;
+        }
+    }
+
+    int capacity;
+    int minFreq;
+
+    Map<Integer, Node> nodeMap;
+    Map<Integer, DoublyLinkedList> freqMap;
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        this.minFreq = 0;
+
+        this.nodeMap = new HashMap<>();
+        this.freqMap = new HashMap<>();
+    }
+
+    public int get(int key) {
+        if (!nodeMap.containsKey(key)) {
+            return -1;
+        }
+
+        Node node = nodeMap.get(key);
+
+        updateFrequency(node);
+
+        return node.value;
+    }
+
+    public void put(int key, int value) {
+        if (capacity == 0) return;
+
+        if (nodeMap.containsKey(key)) {
+            Node node = nodeMap.get(key);
+            node.value = value;
+
+            updateFrequency(node);
+
+            return;
+        }
+
+        if (nodeMap.size() == capacity) {
+            DoublyLinkedList minFreqList = freqMap.get(minFreq);
+
+            Node removedNode = minFreqList.removeTail();
+
+            nodeMap.remove(removedNode.key);
+        }
+
+        Node newNode = new Node(key, value);
+
+        nodeMap.put(key, newNode);
+
+        freqMap
+            .computeIfAbsent(1, k -> new DoublyLinkedList())
+            .addToHead(newNode);
+
+        minFreq = 1;
+    }
+
+    private void updateFrequency(Node node) {
+        int oldFreq = node.freq;
+
+        DoublyLinkedList oldList = freqMap.get(oldFreq);
+
+        oldList.remove(node);
+
+        if (oldFreq == minFreq && oldList.size == 0) {
+            minFreq++;
+        }
+
+        node.freq++;
+
+        freqMap
+            .computeIfAbsent(node.freq, k -> new DoublyLinkedList())
+            .addToHead(node);
+    }
+}
+```
+
+---
+
+# Code Explanation
+
+## Node Class
+
+```java
+class Node {
+    int key;
+    int value;
+    int freq;
+    Node prev;
+    Node next;
+}
+```
+
+Each cache item stores:
+
+```text
+key
+value
+frequency count
+previous pointer
+next pointer
+```
+
+The `prev` and `next` pointers are used because each frequency group is stored as a doubly linked list.
+
+---
+
+## DoublyLinkedList Class
+
+Each frequency has its own doubly linked list.
+
+Example:
+
+```text
+freq 1: head <-> nodeA <-> nodeB <-> tail
+freq 2: head <-> nodeC <-> tail
+```
+
+We add recently used nodes near the head.
+
+So:
+
+```text
+head.next = most recently used node in this frequency
+tail.prev = least recently used node in this frequency
+```
+
+---
+
+## addToHead(node)
+
+```java
+public void addToHead(Node node) {
+    node.next = head.next;
+    node.prev = head;
+
+    head.next.prev = node;
+    head.next = node;
+
+    size++;
+}
+```
+
+This inserts a node right after `head`.
+
+That means this node is now the most recently used node in that frequency group.
+
+---
+
+## remove(node)
+
+```java
+public void remove(Node node) {
+    node.prev.next = node.next;
+    node.next.prev = node.prev;
+
+    size--;
+}
+```
+
+This removes a node from its current frequency list.
+
+Example:
+
+```text
+A <-> B <-> C
+```
+
+If we remove `B`, the list becomes:
+
+```text
+A <-> C
+```
+
+---
+
+## removeTail()
+
+```java
+public Node removeTail() {
+    if (size == 0) return null;
+
+    Node node = tail.prev;
+    remove(node);
+
+    return node;
+}
+```
+
+This removes the least recently used node inside that frequency list.
+
+Because:
+
+```text
+head side = recently used
+tail side = least recently used
+```
+
+So `tail.prev` is the oldest node in that frequency group.
+
+---
+
+# updateFrequency(node)
+
+Whenever we call `get(key)`, that key is used one more time.
+
+So its frequency must increase.
+
+Example:
+
+```text
+Before get(2):
+
+freq 1: 2, 3
+freq 2: 5
+
+After get(2):
+
+freq 1: 3
+freq 2: 2, 5
+```
+
+Code:
+
+```java
+private void updateFrequency(Node node) {
+    int oldFreq = node.freq;
+
+    DoublyLinkedList oldList = freqMap.get(oldFreq);
+
+    oldList.remove(node);
+
+    if (oldFreq == minFreq && oldList.size == 0) {
+        minFreq++;
+    }
+
+    node.freq++;
+
+    freqMap
+        .computeIfAbsent(node.freq, k -> new DoublyLinkedList())
+        .addToHead(node);
+}
+```
+
+This does:
+
+```text
+1. Remove node from old frequency list.
+2. If old list was minFreq and became empty, increase minFreq.
+3. Increase node frequency.
+4. Add node to new frequency list.
+```
+
+---
+
+# Why minFreq = 1 for New Node?
+
+Every new node starts with frequency `1`.
+
+```java
+this.freq = 1;
+```
+
+So after inserting a new node, the minimum frequency in the cache must become `1`.
+
+That is why we do:
+
+```java
+minFreq = 1;
+```
+
+---
+
+# Complexity
+
+```text
+get(): O(1)
+put(): O(1)
+
+Space Complexity: O(capacity)
+```
+
+HashMap access is `O(1)`, and adding/removing from a doubly linked list is also `O(1)`.
