@@ -1,0 +1,866 @@
+# Reverse Nodes in k-Group
+
+## Problem
+
+Given the head of a linked list, reverse the nodes of the list `k` at a time and return the modified list.
+
+If the number of nodes is not a multiple of `k`, then the remaining nodes at the end should stay in the same order.
+
+---
+
+## Example
+
+```text
+Input:
+head = 1 -> 2 -> 3 -> 4 -> 5
+k = 2
+
+Output:
+2 -> 1 -> 4 -> 3 -> 5
+```
+
+Explanation:
+
+```text
+Original groups:
+[1, 2] [3, 4] [5]
+
+After reversing each full group:
+[2, 1] [4, 3] [5]
+
+Final:
+2 -> 1 -> 4 -> 3 -> 5
+```
+
+---
+
+## Main Idea
+
+This problem is based on the normal reverse linked list logic.
+
+Normal reverse linked list reverses the whole list.
+
+Here, we reverse only `k` nodes at a time.
+
+For each group:
+
+1. Check if there are at least `k` nodes.
+2. If yes, reverse those `k` nodes.
+3. Connect the previous reversed group to the current reversed group.
+4. Move to the next group.
+5. If fewer than `k` nodes remain, leave them as they are.
+
+---
+
+## Important Pointers
+
+```java
+ListNode ptr
+```
+
+Used to check whether there are at least `k` nodes available.
+
+```java
+ListNode ktail
+```
+
+Stores the tail of the previous reversed group.
+
+This helps connect the previous group to the current reversed group.
+
+```java
+ListNode newHead
+```
+
+Stores the head of the final answer.
+
+After reversing the first group, the head of that reversed group becomes the new head of the whole list.
+
+```java
+ListNode head
+```
+
+Represents the start of the current group.
+
+---
+
+## Algorithm
+
+```text
+1. Set ptr = head.
+2. Set ktail = null.
+3. Set newHead = null.
+
+4. While ptr is not null:
+   a. Set count = 0.
+   b. Set ptr = head.
+
+   c. Move ptr forward k times to check if k nodes exist.
+      - If count reaches k, we have a complete group.
+      - If count is less than k, we do not reverse the remaining nodes.
+
+   d. If count == k:
+      - Reverse k nodes starting from head.
+      - Store the reversed group's head in revHead.
+
+      - If newHead is null, set newHead = revHead.
+        This happens only for the first reversed group.
+
+      - If ktail is not null, connect ktail.next = revHead.
+        This connects the previous reversed group to the current reversed group.
+
+      - Set ktail = head.
+        The old head becomes the tail after reversing.
+
+      - Set head = ptr.
+        Move head to the start of the next group.
+
+5. After the loop, if ktail is not null:
+   connect ktail.next = head.
+   This attaches the leftover nodes that are fewer than k.
+
+6. Return newHead if it is not null.
+   Otherwise, return head.
+```
+
+---
+
+## Full Java Code
+
+```java
+class Solution {
+    public ListNode reverseKGroup(ListNode head, int k) {
+        
+        ListNode ptr = head;
+        ListNode ktail = null;
+        ListNode newHead = null;
+        
+        while (ptr != null) {
+            int count = 0;
+            ptr = head;
+            
+            while (count < k && ptr != null) {
+                ptr = ptr.next;
+                count++;
+            }
+            
+            if (count == k) {
+                ListNode revHead = reverseLinkedList(head, k);
+                
+                if (newHead == null) {
+                    newHead = revHead;
+                }
+                
+                if (ktail != null) {
+                    ktail.next = revHead;
+                }
+                
+                ktail = head;
+                head = ptr;
+            }
+        }
+        
+        if (ktail != null) {
+            ktail.next = head;
+        }
+        
+        return newHead == null ? head : newHead;
+    }
+    
+    private ListNode reverseLinkedList(ListNode head, int k) {
+        
+        ListNode newHead = null;
+        ListNode ptr = head;
+        
+        while (k > 0) {
+            ListNode nextNode = ptr.next;
+            ptr.next = newHead;
+            newHead = ptr;
+            ptr = nextNode;
+            k--;
+        }
+        
+        return newHead;
+    }
+}
+```
+
+---
+
+# Code-Level Explanation
+
+## Main Function
+
+```java
+public ListNode reverseKGroup(ListNode head, int k)
+```
+
+This function reverses the linked list in groups of size `k`.
+
+---
+
+## Step 1: Initialize Pointers
+
+```java
+ListNode ptr = head;
+ListNode ktail = null;
+ListNode newHead = null;
+```
+
+### `ptr`
+
+Used to move ahead and check whether a full group of `k` nodes exists.
+
+### `ktail`
+
+Stores the tail of the previous reversed group.
+
+Example:
+
+```text
+After reversing 1 -> 2 into 2 -> 1:
+
+2 -> 1
+     ^
+   ktail
+```
+
+### `newHead`
+
+Stores the final head of the answer.
+
+Example:
+
+```text
+Original:
+1 -> 2 -> 3 -> 4 -> 5
+
+After first reversal:
+2 -> 1
+
+newHead = 2
+```
+
+---
+
+# Outer While Loop
+
+```java
+while (ptr != null) {
+```
+
+This loop keeps processing groups while there are nodes left.
+
+Each iteration tries to process one group of size `k`.
+
+---
+
+## Reset Count and Pointer
+
+```java
+int count = 0;
+ptr = head;
+```
+
+`count` checks how many nodes are available in the current group.
+
+`ptr = head` makes `ptr` start from the current group head.
+
+---
+
+# Inner While Loop
+
+```java
+while (count < k && ptr != null) {
+    ptr = ptr.next;
+    count++;
+}
+```
+
+This loop checks if there are at least `k` nodes left.
+
+It does not reverse anything.
+
+It only moves `ptr` forward.
+
+Example:
+
+```text
+head = 1
+k = 2
+
+List:
+1 -> 2 -> 3 -> 4 -> 5
+```
+
+After this loop:
+
+```text
+count = 2
+ptr = 3
+```
+
+Meaning:
+
+```text
+Group to reverse: 1 -> 2
+Next group starts at: 3
+```
+
+---
+
+# Check if the Group Has k Nodes
+
+```java
+if (count == k) {
+```
+
+If `count == k`, we have a complete group and can reverse it.
+
+If `count < k`, we leave the remaining nodes unchanged.
+
+---
+
+# Reverse Current Group
+
+```java
+ListNode revHead = reverseLinkedList(head, k);
+```
+
+This reverses exactly `k` nodes starting from `head`.
+
+Example:
+
+```text
+head = 1
+k = 2
+
+Before:
+1 -> 2
+
+After:
+2 -> 1
+
+revHead = 2
+```
+
+---
+
+# Set Final Answer Head
+
+```java
+if (newHead == null) {
+    newHead = revHead;
+}
+```
+
+This runs only for the first reversed group.
+
+Example:
+
+```text
+Original:
+1 -> 2 -> 3 -> 4 -> 5
+
+After reversing first group:
+2 -> 1
+
+newHead = 2
+```
+
+The final answer must start from `2`.
+
+---
+
+# Connect Previous Group to Current Group
+
+```java
+if (ktail != null) {
+    ktail.next = revHead;
+}
+```
+
+This connects the previous reversed group to the current reversed group.
+
+Example:
+
+After reversing first group:
+
+```text
+2 -> 1
+     ^
+   ktail
+```
+
+After reversing second group:
+
+```text
+4 -> 3
+```
+
+Now:
+
+```java
+ktail.next = revHead;
+```
+
+means:
+
+```text
+1.next = 4
+```
+
+Final connected part:
+
+```text
+2 -> 1 -> 4 -> 3
+```
+
+---
+
+# Update ktail
+
+```java
+ktail = head;
+```
+
+This is very important.
+
+Before reversing, `head` was the first node of the group.
+
+After reversing, that same node becomes the tail.
+
+Example:
+
+```text
+Before reversing:
+head = 3
+
+3 -> 4
+```
+
+After reversing:
+
+```text
+4 -> 3
+     ^
+   ktail
+```
+
+So:
+
+```java
+ktail = head;
+```
+
+means the old group head is now the tail of the reversed group.
+
+---
+
+# Move to Next Group
+
+```java
+head = ptr;
+```
+
+After checking `k` nodes, `ptr` points to the next group start.
+
+Example:
+
+```text
+Before:
+1 -> 2 -> 3 -> 4 -> 5
+
+After checking first group of k = 2:
+ptr = 3
+```
+
+So:
+
+```java
+head = ptr;
+```
+
+means the next group starts at `3`.
+
+---
+
+# Attach Remaining Nodes
+
+```java
+if (ktail != null) {
+    ktail.next = head;
+}
+```
+
+This connects leftover nodes that are fewer than `k`.
+
+Example:
+
+```text
+head = 1 -> 2 -> 3 -> 4 -> 5
+k = 2
+```
+
+After reversing full groups:
+
+```text
+2 -> 1 -> 4 -> 3
+```
+
+Remaining node:
+
+```text
+5
+```
+
+At the end:
+
+```java
+ktail.next = head;
+```
+
+connects:
+
+```text
+3.next = 5
+```
+
+Final:
+
+```text
+2 -> 1 -> 4 -> 3 -> 5
+```
+
+---
+
+# Return Answer
+
+```java
+return newHead == null ? head : newHead;
+```
+
+If at least one group was reversed, `newHead` stores the answer head.
+
+If no group was reversed, return the original `head`.
+
+Example:
+
+```text
+head = 1 -> 2
+k = 3
+```
+
+There are not enough nodes to reverse.
+
+So `newHead` stays `null`.
+
+Return original head:
+
+```text
+1 -> 2
+```
+
+---
+
+# Helper Function Explanation
+
+```java
+private ListNode reverseLinkedList(ListNode head, int k)
+```
+
+This function reverses exactly `k` nodes starting from `head`.
+
+---
+
+## Helper Function Code
+
+```java
+private ListNode reverseLinkedList(ListNode head, int k) {
+    
+    ListNode newHead = null;
+    ListNode ptr = head;
+    
+    while (k > 0) {
+        ListNode nextNode = ptr.next;
+        ptr.next = newHead;
+        newHead = ptr;
+        ptr = nextNode;
+        k--;
+    }
+    
+    return newHead;
+}
+```
+
+---
+
+## Helper Function Logic
+
+This is the same as normal reverse linked list, but it only runs `k` times.
+
+For example:
+
+```text
+Input:
+1 -> 2 -> 3 -> 4 -> 5
+k = 3
+```
+
+Only reverse:
+
+```text
+1 -> 2 -> 3
+```
+
+After reverse:
+
+```text
+3 -> 2 -> 1
+```
+
+Remaining part:
+
+```text
+4 -> 5
+```
+
+The main function connects the reversed part back to the remaining list later.
+
+---
+
+## Helper Function Line-by-Line
+
+```java
+ListNode newHead = null;
+```
+
+This stores the head of the reversed part.
+
+Initially, nothing is reversed.
+
+---
+
+```java
+ListNode ptr = head;
+```
+
+`ptr` starts at the current group head.
+
+---
+
+```java
+while (k > 0) {
+```
+
+Reverse exactly `k` nodes.
+
+---
+
+```java
+ListNode nextNode = ptr.next;
+```
+
+Save the next node before changing the pointer.
+
+This is needed because after reversing the link, we would lose access to the rest of the list.
+
+---
+
+```java
+ptr.next = newHead;
+```
+
+Reverse the current node’s link.
+
+Example:
+
+```text
+Before:
+1 -> 2
+
+After:
+1 -> null
+```
+
+---
+
+```java
+newHead = ptr;
+```
+
+Move `newHead` to the current node.
+
+This grows the reversed list.
+
+---
+
+```java
+ptr = nextNode;
+```
+
+Move `ptr` to the next original node.
+
+---
+
+```java
+k--;
+```
+
+One node has been reversed, so decrease `k`.
+
+---
+
+```java
+return newHead;
+```
+
+Return the head of the reversed group.
+
+---
+
+# Full Trace
+
+Input:
+
+```text
+head = 1 -> 2 -> 3 -> 4 -> 5
+k = 2
+```
+
+---
+
+## First Group
+
+Current group:
+
+```text
+1 -> 2
+```
+
+Reverse:
+
+```text
+2 -> 1
+```
+
+Pointers:
+
+```text
+newHead = 2
+ktail = 1
+head = 3
+```
+
+Current result:
+
+```text
+2 -> 1
+```
+
+---
+
+## Second Group
+
+Current group:
+
+```text
+3 -> 4
+```
+
+Reverse:
+
+```text
+4 -> 3
+```
+
+Connect previous group:
+
+```text
+1.next = 4
+```
+
+Current result:
+
+```text
+2 -> 1 -> 4 -> 3
+```
+
+Pointers:
+
+```text
+ktail = 3
+head = 5
+```
+
+---
+
+## Remaining Nodes
+
+Remaining:
+
+```text
+5
+```
+
+Since there is only one node left and `k = 2`, do not reverse it.
+
+Connect:
+
+```text
+3.next = 5
+```
+
+Final:
+
+```text
+2 -> 1 -> 4 -> 3 -> 5
+```
+
+---
+
+# Complexity
+
+## Time Complexity
+
+```text
+O(n)
+```
+
+Each node is visited and reversed at most once.
+
+## Space Complexity
+
+```text
+O(1)
+```
+
+No extra data structures are used. Only pointers are used.
+
+---
+
+# Key Takeaways
+
+```text
+1. ptr checks whether a full k-group exists.
+2. reverseLinkedList reverses exactly k nodes.
+3. newHead stores the final answer head.
+4. ktail connects the previous reversed group to the current reversed group.
+5. The old head of a group becomes the tail after reversal.
+6. Leftover nodes fewer than k are attached unchanged.
+```
+
+---
+
+# Short Memory Trick
+
+For every group:
+
+```text
+1. Check if k nodes exist.
+2. Reverse k nodes.
+3. Connect previous group tail to reversed head.
+4. Update ktail to old head.
+5. Move head to next group.
+6. Attach leftovers at the end.
+```
