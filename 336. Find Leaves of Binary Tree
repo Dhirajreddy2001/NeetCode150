@@ -1,0 +1,64 @@
+
+We are given root of the binary tree and our job is to extract the leaf nodes as list of list until root != null.
+Input: root = [1,2,3,4,5]
+Output: [[4,5,3],[2],[1]]
+
+
+what solution does :
+
+while root is not null:
+    collect current leaves
+    remove those leaves from the tree
+    add collected leaves to result
+
+Example :
+        1
+       / \
+      2   3
+     / \
+    4   5
+
+    first round leaf nodes are [4, 5, 3]
+
+    then tree will be  1
+                      /
+                    2
+      Now second round will be: leaves = [2] , result = [ [4,5,3], [2]]
+    Now Tree will become : 1
+
+    then third round of iteration : leaves = [1], result  = [ [4,5,3] [2], [1]]
+
+    
+class Solution {
+    public List<List<Integer>> findLeaves(TreeNode root) {
+
+        List<List<Integer>> result = new ArrayList<>();
+
+        while(root != null)
+        {
+            List<Integer> leaves = new ArrayList<>();
+            root = removeLeaves(root, leaves);
+            result.add(leaves);
+        }
+        
+        return result;
+    }
+
+    private TreeNode removeLeaves(TreeNode root, List<Integer> leaves)
+    {
+        if(root == null){ return null; }
+
+        if(root.left == null && root.right == null)
+        {
+            leaves.add(root.val);
+            return null;
+        }
+
+        root.left = removeLeaves(root.left, leaves);
+        root.right = removeLeaves(root.right, leaves);
+
+
+        return root;
+
+    }
+}
