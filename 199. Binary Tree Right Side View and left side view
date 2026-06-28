@@ -1,0 +1,790 @@
+# LeetCode 199: Binary Tree Right Side View
+
+## Problem
+
+Given the root of a binary tree, return the values of the nodes visible from the right side.
+
+The right side view contains the last node at every level when the tree is viewed from the right.
+
+---
+
+
+
+class Solution {
+    public List<Integer> rightSideView(TreeNode root) {
+
+        List<Integer> list = new ArrayList<>();
+
+        if(root == null) return list;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        while(!queue.isEmpty())
+        {
+            int levelSize = queue.size();
+            for(int  i =0; i< levelSize; i++)
+            {
+                TreeNode currentNode = queue.poll();
+                if( i == levelSize -1)
+                {
+                    list.add(currentNode.val);
+                }
+                if(currentNode.left != null)
+                {
+                    queue.add(currentNode.left);
+
+                }
+                if(currentNode.right != null)
+                {
+                    queue.add(currentNode.right);
+                }
+            }
+
+           
+        }
+
+     return list;
+        
+    }
+}
+
+## Example
+
+```text
+Input Tree:
+
+        1
+       / \
+      2   3
+       \   \
+        5   4
+
+Output:
+[1, 3, 4]
+```
+
+Explanation:
+
+```text
+Level 0: 1        -> rightmost node is 1
+Level 1: 2, 3     -> rightmost node is 3
+Level 2: 5, 4     -> rightmost node is 4
+```
+
+So the right side view is:
+
+```text
+[1, 3, 4]
+```
+
+---
+
+## Idea
+
+Use BFS, also called level order traversal.
+
+For each level, process all nodes in that level.
+
+Since we add the left child first and then the right child, the last node processed in each level is the rightmost node.
+
+So whenever we are at the last node of a level, we add it to the answer list.
+
+---
+
+## Algorithm
+
+```text
+1. Create an empty result list.
+
+2. If root is null, return the empty list.
+
+3. Create a queue and add root to it.
+
+4. While the queue is not empty:
+   a. Store the current queue size as levelSize.
+      This represents the number of nodes in the current level.
+
+   b. Run a for loop from i = 0 to levelSize - 1.
+
+   c. Poll one node from the queue.
+
+   d. If i == levelSize - 1:
+      This is the last node of the current level.
+      Add its value to the result list.
+
+   e. Add the left child to the queue if it exists.
+
+   f. Add the right child to the queue if it exists.
+
+5. Return the result list.
+```
+
+---
+
+## Java Code
+
+```java
+class Solution {
+    public List<Integer> rightSideView(TreeNode root) {
+
+        List<Integer> list = new ArrayList<>();
+
+        if (root == null) return list;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            int levelSize = queue.size();
+
+            for (int i = 0; i < levelSize; i++) {
+                TreeNode currentNode = queue.poll();
+
+                if (i == levelSize - 1) {
+                    list.add(currentNode.val);
+                }
+
+                if (currentNode.left != null) {
+                    queue.add(currentNode.left);
+                }
+
+                if (currentNode.right != null) {
+                    queue.add(currentNode.right);
+                }
+            }
+        }
+
+        return list;
+    }
+}
+```
+
+---
+
+## Code Explanation
+
+### Create the result list
+
+```java
+List<Integer> list = new ArrayList<>();
+```
+
+This list stores the right side view values.
+
+At the end, this list is returned.
+
+---
+
+### Handle empty tree
+
+```java
+if (root == null) return list;
+```
+
+If the tree is empty, there is nothing visible from the right side.
+
+So return an empty list.
+
+---
+
+### Create queue for BFS
+
+```java
+Queue<TreeNode> queue = new LinkedList<>();
+queue.add(root);
+```
+
+The queue helps us process the tree level by level.
+
+Initially, only the root is in the queue.
+
+---
+
+### Process while queue is not empty
+
+```java
+while (!queue.isEmpty()) {
+```
+
+This loop runs as long as there are nodes left to process.
+
+Each iteration of this loop processes one level of the tree.
+
+---
+
+### Store current level size
+
+```java
+int levelSize = queue.size();
+```
+
+This stores how many nodes are present in the current level.
+
+This is important because while processing the current level, we add children into the queue.
+
+Those children belong to the next level, not the current one.
+
+---
+
+### Process each node in the current level
+
+```java
+for (int i = 0; i < levelSize; i++) {
+```
+
+This loop processes exactly `levelSize` nodes.
+
+That means it only processes the current level.
+
+---
+
+### Remove the front node from queue
+
+```java
+TreeNode currentNode = queue.poll();
+```
+
+This removes and returns the next node from the queue.
+
+---
+
+### Add rightmost node of current level
+
+```java
+if (i == levelSize - 1) {
+    list.add(currentNode.val);
+}
+```
+
+This is the key logic.
+
+Since we process the level from left to right, the last node in the level is the rightmost node.
+
+So when:
+
+```java
+i == levelSize - 1
+```
+
+we add that node to the result list.
+
+---
+
+### Add left child
+
+```java
+if (currentNode.left != null) {
+    queue.add(currentNode.left);
+}
+```
+
+If the current node has a left child, add it to the queue.
+
+This child will be processed in the next level.
+
+---
+
+### Add right child
+
+```java
+if (currentNode.right != null) {
+    queue.add(currentNode.right);
+}
+```
+
+If the current node has a right child, add it to the queue.
+
+This child will also be processed in the next level.
+
+---
+
+## Full Code Trace
+
+### Input Tree
+
+```text
+        1
+       / \
+      2   3
+       \   \
+        5   4
+```
+
+Expected output:
+
+```text
+[1, 3, 4]
+```
+
+---
+
+### Initial State
+
+```text
+list = []
+queue = [1]
+```
+
+---
+
+## Level 0
+
+At the start of this level:
+
+```text
+queue = [1]
+levelSize = 1
+```
+
+There is only one node in this level.
+
+### Process node 1
+
+```text
+i = 0
+currentNode = 1
+queue after poll = []
+```
+
+Check:
+
+```text
+i == levelSize - 1
+0 == 0
+```
+
+This is true, so add `1`.
+
+```text
+list = [1]
+```
+
+Add children of `1`:
+
+```text
+left child = 2
+right child = 3
+```
+
+Queue becomes:
+
+```text
+queue = [2, 3]
+```
+
+---
+
+## Level 1
+
+At the start of this level:
+
+```text
+queue = [2, 3]
+levelSize = 2
+```
+
+This level has two nodes: `2` and `3`.
+
+### Process node 2
+
+```text
+i = 0
+currentNode = 2
+queue after poll = [3]
+```
+
+Check:
+
+```text
+i == levelSize - 1
+0 == 1
+```
+
+False, so do not add `2`.
+
+Add children of `2`:
+
+```text
+left child = null
+right child = 5
+```
+
+Queue becomes:
+
+```text
+queue = [3, 5]
+```
+
+### Process node 3
+
+```text
+i = 1
+currentNode = 3
+queue after poll = [5]
+```
+
+Check:
+
+```text
+i == levelSize - 1
+1 == 1
+```
+
+True, so add `3`.
+
+```text
+list = [1, 3]
+```
+
+Add children of `3`:
+
+```text
+left child = null
+right child = 4
+```
+
+Queue becomes:
+
+```text
+queue = [5, 4]
+```
+
+---
+
+## Level 2
+
+At the start of this level:
+
+```text
+queue = [5, 4]
+levelSize = 2
+```
+
+This level has two nodes: `5` and `4`.
+
+### Process node 5
+
+```text
+i = 0
+currentNode = 5
+queue after poll = [4]
+```
+
+Check:
+
+```text
+i == levelSize - 1
+0 == 1
+```
+
+False, so do not add `5`.
+
+Node `5` has no children.
+
+Queue remains:
+
+```text
+queue = [4]
+```
+
+### Process node 4
+
+```text
+i = 1
+currentNode = 4
+queue after poll = []
+```
+
+Check:
+
+```text
+i == levelSize - 1
+1 == 1
+```
+
+True, so add `4`.
+
+```text
+list = [1, 3, 4]
+```
+
+Node `4` has no children.
+
+Queue remains:
+
+```text
+queue = []
+```
+
+---
+
+## End
+
+The queue is now empty:
+
+```text
+queue = []
+```
+
+So the while loop stops.
+
+Return:
+
+
+[1, 3, 4]
+
+
+---
+
+## Why `levelSize` Is Important
+
+At the start of every level, the queue contains only the nodes of that level.
+
+Example:
+
+
+queue = [2, 3]
+levelSize = 2
+
+
+While processing `2` and `3`, we add their children `5` and `4`.
+
+But those children belong to the next level.
+
+Because `levelSize` is fixed at `2`, the for loop only processes `2` and `3`.
+
+Then the next while loop iteration processes `5` and `4`.
+
+This keeps levels separated correctly.
+
+---
+
+## Why `i == levelSize - 1` Works
+
+At every level, nodes are processed from left to right.
+
+Example:
+
+```text
+Level 1:
+2, 3
+```
+
+Indexes:
+
+```text
+i = 0 -> node 2
+i = 1 -> node 3
+```
+
+The last index is:
+
+```text
+levelSize - 1 = 1
+```
+
+So node `3` is the last node in that level.
+
+That is the node visible from the right side.
+
+---
+
+## Complexity
+
+### Time Complexity
+
+```text
+O(n)
+```
+
+Every node is visited once.
+
+### Space Complexity
+
+```text
+O(n)
+```
+
+In the worst case, the queue can store many nodes from one level.
+
+For a complete binary tree, the last level can contain around `n / 2` nodes.
+
+
+
+
+###Left Side View
+Binary Tree Left Side View
+Problem
+Given the root of a binary tree, return the values of the nodes visible from the left side.
+The left side view contains the first node at every level.
+Example
+Input Tree:
+
+        1
+       / \
+      2   3
+       \   \
+        5   4
+
+Output:
+[1, 2, 5]
+Explanation:
+Level 0: 1        -> leftmost node is 1
+Level 1: 2, 3     -> leftmost node is 2
+Level 2: 5, 4     -> leftmost node is 5
+So the left side view is:
+[1, 2, 5]
+Idea
+Use BFS / Level Order Traversal.
+For every level, we process all nodes.
+The first node in each level is the node visible from the left side.
+So inside the level loop, when:
+i == 0
+we add that node to the answer.
+Java Code
+class Solution {
+    public List<Integer> leftSideView(TreeNode root) {
+
+        List<Integer> result = new ArrayList<>();
+
+        if (root == null) return result;
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+
+        while (!queue.isEmpty()) {
+            int levelSize = queue.size();
+
+            for (int i = 0; i < levelSize; i++) {
+                TreeNode currentNode = queue.poll();
+
+                if (i == 0) {
+                    result.add(currentNode.val);
+                }
+
+                if (currentNode.left != null) {
+                    queue.add(currentNode.left);
+                }
+
+                if (currentNode.right != null) {
+                    queue.add(currentNode.right);
+                }
+            }
+        }
+
+        return result;
+    }
+}
+Code Explanation
+Create result list
+List<Integer> result = new ArrayList<>();
+This stores the final left side view.
+Empty tree case
+if (root == null) return result;
+If the tree is empty, return an empty list.
+Create queue
+Queue<TreeNode> queue = new LinkedList<>();
+queue.add(root);
+We use a queue to perform BFS.
+At the beginning:
+queue = [1]
+Process level by level
+while (!queue.isEmpty()) {
+This loop runs until all nodes are processed.
+Each iteration handles one level.
+Get current level size
+int levelSize = queue.size();
+This tells us how many nodes are in the current level.
+This is important because while processing one level, we add children into the queue for the next level.
+Process each node in that level
+for (int i = 0; i < levelSize; i++) {
+This loop processes only the current level.
+Remove current node
+TreeNode currentNode = queue.poll();
+This removes the front node from the queue.
+Add first node of the level
+if (i == 0) {
+    result.add(currentNode.val);
+}
+This is the main logic.
+Since we process each level from left to right, the first node of every level is the leftmost node.
+So we add it to the result.
+Add children
+if (currentNode.left != null) {
+    queue.add(currentNode.left);
+}
+
+if (currentNode.right != null) {
+    queue.add(currentNode.right);
+}
+We add the left child first, then the right child.
+This keeps the level order from left to right.
+Trace
+Input tree:
+        1
+       / \
+      2   3
+       \   \
+        5   4
+Initial state:
+result = []
+queue = [1]
+Level 0
+queue = [1]
+levelSize = 1
+Process node 1:
+i = 0
+currentNode = 1
+Since i == 0, add 1.
+result = [1]
+Add children:
+queue = [2, 3]
+Level 1
+queue = [2, 3]
+levelSize = 2
+Process node 2:
+i = 0
+currentNode = 2
+Since i == 0, add 2.
+result = [1, 2]
+Node 2 has right child 5.
+queue = [3, 5]
+Process node 3:
+i = 1
+currentNode = 3
+Since i != 0, do not add 3.
+Node 3 has right child 4.
+queue = [5, 4]
+Level 2
+queue = [5, 4]
+levelSize = 2
+Process node 5:
+i = 0
+currentNode = 5
+Since i == 0, add 5.
+result = [1, 2, 5]
+Process node 4:
+i = 1
+currentNode = 4
+Do not add 4.
+Queue becomes empty.
+Final Answer
+[1, 2, 5]
+Difference Between Right Side View and Left Side View
+For right side view:
+if (i == levelSize - 1) {
+    result.add(currentNode.val);
+}
+For left side view:
+if (i == 0) {
+    result.add(currentNode.val);
+}
+That is the only main difference.
+Complexity
+Time Complexity
+O(n)
+Every node is visited once.
+Space Complexity
+O(n)
+The queue can store many nodes at one level.
