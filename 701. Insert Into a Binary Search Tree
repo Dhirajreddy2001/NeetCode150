@@ -1,0 +1,32 @@
+Algorithm:
+Step 1:
+Start from the root of the BST.
+
+Step 2:
+If root is null:
+    create a new TreeNode with val
+    return that node
+
+Step 3:
+If val is smaller than root.val:
+    insert val into the left subtree
+
+Step 4:
+If val is greater than root.val:
+    insert val into the right subtree
+
+Step 5:
+After insertion, return root.
+
+
+class Solution {
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+
+        if( root == null) return new TreeNode(val);
+
+        if(root.val > val) root.left = insertIntoBST(root.left, val);
+        else root.right = insertIntoBST(root.right, val);
+
+        return root;
+    }
+}
