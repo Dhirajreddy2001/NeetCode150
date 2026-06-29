@@ -1,0 +1,63 @@
+We are given a binary tree as input and our job is to find the path that yields a maximum sum.
+
+Solution (using recursion):
+Step 1:
+Initialize a global variable maxSum as Integer.MIN_VALUE.
+
+Step 2:
+Create a helper function maxGain(root).
+
+If root is null:
+    return 0
+
+Find the best gain from the left subtree.
+If it is negative, treat it as 0.
+
+Find the best gain from the right subtree.
+If it is negative, treat it as 0.
+
+Now calculate the best path where current node is the turning point:
+
+    currentPathSum = root.val + leftGain + rightGain
+
+Update:
+
+    maxSum = max(maxSum, currentPathSum)
+
+Return the best one-side path to the parent:
+
+    root.val + max(leftGain, rightGain)
+
+Step 3:
+Call maxGain(root) from maxPathSum.
+
+Step 4:
+Return maxSum.
+
+
+
+## Code:
+class Solution {
+    int maxSum = Integer.MIN_VALUE;
+
+    private int maxGain(TreeNode root) {
+        if (root == null) return 0;
+
+        // Ignore negative paths because they reduce the total sum
+        int leftGain = Math.max(maxGain(root.left), 0);
+        int rightGain = Math.max(maxGain(root.right), 0);
+
+        // Best path where current node is the turning point
+        int currentPathSum = root.val + leftGain + rightGain;
+
+        maxSum = Math.max(maxSum, currentPathSum);
+
+        // Return only one side because parent can continue one path only
+        return root.val + Math.max(leftGain, rightGain);
+    }
+
+    public int maxPathSum(TreeNode root) {
+        maxGain(root);
+        return maxSum;
+    }
+}
