@@ -1,0 +1,111 @@
+Given the root of a binary tree, return the zigzag level order traversal of its nodes' values. (i.e., from left to right, then right to left for the next level and alternate between).
+
+
+We are given binary tree root and we have to return the elements in level order but left to right for one row and right to left for another row which is called zigzag order
+
+
+Algorithm:
+
+1. If root is null, return empty list.
+
+2. Create result list.
+
+3. Create a queue and add root.
+
+4. Add null to queue as level separator.
+
+5. Create level_list to store current level values.
+
+6. Set is_ordered_left = true.
+
+7. While queue is not empty:
+   a. Poll first node.
+
+   b. If node is not null:
+      - If is_ordered_left is true, add node value at the end of level_list.
+      - Otherwise, add node value at the front of level_list.
+      - Add left child if it exists.
+      - Add right child if it exists.
+
+   c. If node is null:
+      - Add level_list to result.
+      - Create a new level_list.
+      - If queue still has nodes, add another null separator.
+      - Flip is_ordered_left.
+
+8. Return result.
+
+
+Solution :
+public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+
+        if(root == null) return new ArrayList<List<Integer>>();
+
+        List<List<Integer>> result = new ArrayList<>();
+        LinkedList<TreeNode> node_queue = new LinkedList<>();
+
+        node_queue.addLast(root);
+        node_queue.addLast(null);
+        LinkedList<Integer> level_list = new LinkedList<Integer>();
+        boolean is_ordered_left = true;
+
+        while(node_queue.size() > 0)
+        {
+            TreeNode curr_node = node_queue.pollFirst();
+
+            if(curr_node != null)
+            {
+                if(is_ordered_left){ level_list.addLast(curr_node.val);}
+                else { level_list.addFirst(curr_node.val); }
+
+                if(curr_node.left != null) { node_queue.add(curr_node.left);}
+                if(curr_node.right != null) { node_queue.add(curr_node.right);}
+            }
+            else{
+                 result.add(level_list);
+                 level_list = new LinkedList<Integer>();
+
+                 if(node_queue.size() > 0) { node_queue.addLast(null);}
+                 is_ordered_left = !is_ordered_left;
+            }
+         }
+
+
+         return result;
+       
+    }
+
+  
+}
+
+
+
+
+other approach :
+class Solution {
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+
+        List<List<Integer>> result = new ArrayList<>();
+        dfs(root, 0, result);
+        return result;
+    }
+
+    private void dfs(TreeNode node, int level, List<List<Integer>> result) {
+        if (node == null) return;
+
+        if (level == result.size()) {
+            result.add(new LinkedList<>());
+        }
+
+        LinkedList<Integer> currentLevel = (LinkedList<Integer>) result.get(level);
+
+        if (level % 2 == 0) {
+            currentLevel.addLast(node.val);
+        } else {
+            currentLevel.addFirst(node.val);
+        }
+
+        dfs(node.left, level + 1, result);
+        dfs(node.right, level + 1, result);
+    }
+}
