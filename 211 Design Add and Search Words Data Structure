@@ -1,0 +1,97 @@
+searchInTree(word, node):
+
+1. Start from the given node.
+
+2. For each character ch in word:
+
+   a. If ch is a normal letter:
+      - If current node does not have this child, return false.
+      - Move to that child.
+
+   b. If ch is '.':
+      - Try every child of the current node.
+      - For each child, recursively search the remaining part of the word.
+      - If any child returns true, return true.
+      - If no child works, return false.
+
+3. After processing all characters:
+   - Return node.word.
+
+
+   class TrieNode {
+    // Stores child nodes for each character
+    Map<Character, TrieNode> children = new HashMap<>();
+
+    // True if a complete word ends at this node
+    boolean word = false;
+}
+
+class WordDictionary {
+    // Root node of the trie
+    TrieNode trie;
+
+    public WordDictionary() {
+        trie = new TrieNode();
+    }
+    
+    public void addWord(String word) {
+        // Start from the root
+        TrieNode node = trie;
+
+        // Insert each character one by one
+        for (char ch : word.toCharArray()) {
+
+            // If character path does not exist, create a new node
+            if (!node.children.containsKey(ch)) {
+                node.children.put(ch, new TrieNode());
+            }
+
+            // Move to the child node
+            node = node.children.get(ch);
+        }
+
+        // Mark the last node as the end of a complete word
+        node.word = true;
+    }
+    
+    private boolean searchInTree(String word, TrieNode node) {
+
+        // Traverse each character in the search word
+        for (int i = 0; i < word.length(); i++) {
+            char ch = word.charAt(i);
+
+            // If character is '.', it can match any child character
+            if (ch == '.') {
+
+                // Try all possible children from current node
+                for (TrieNode child : node.children.values()) {
+
+                    // Search remaining part of word from this child
+                    if (searchInTree(word.substring(i + 1), child)) {
+                        return true;
+                    }
+                }
+
+                // If no child matches, return false
+                return false;
+            }
+
+            // For normal character, path must exist
+            if (!node.children.containsKey(ch)) {
+                return false;
+            }
+
+            // Move to the next character node
+            node = node.children.get(ch);
+        }
+
+        // After all characters are matched,
+        // return true only if this node marks a complete word
+        return node.word;
+    }
+    
+    public boolean search(String word) {
+        // Start searching from root
+        return searchInTree(word, trie);
+    }
+}
