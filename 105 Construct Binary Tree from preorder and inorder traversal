@@ -1,0 +1,33 @@
+class solution
+{
+int preorderIndex;
+Map<Integer, Integer> preorderIndexMap;
+public TreeNode buildTree(int[] preorder, int[] inorder)
+{
+  preorderIndex = 0;
+  preorderIndexMap= new HashMap<>();
+
+  for(int i =0; i < preorder.length; i++)
+  {
+     preorderIndexMap.put(preorder[i], i);
+  }
+
+  return arrayToTree(preorder, o, preorder.length - 1);
+
+}
+
+private TreeNode arrayToTree(int[] preorder, int left, int right)
+{
+
+  if(left > right) return null;
+
+  int rootValue = preorder[preorderIdex];
+  preorderIndex++;
+
+  TreeNode root = TreeNode(rootValue);
+  root.left = arrayToTree(preorder, left, preorderIndexMap.get(rootValue)-1);
+  root.left = arrayToTree(preorder, preorderIndexMap.get(rootValue)+1, right);
+
+  return root;
+  }
+  }
