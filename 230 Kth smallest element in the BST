@@ -1,0 +1,35 @@
+We are given an root node of the binary search tree and our job is to return k th smallest element.
+
+In BST we know that the tree is always balanced so we can do in order traversal of the tree and store the elements in a array/list and return k-1th  element.
+
+1. Create an empty list.
+
+2. Do inorder traversal:
+   - Visit left subtree.
+   - Add current node value.
+   - Visit right subtree.
+
+3. After traversal, the list contains BST values in sorted order.
+
+4. Return list.get(k - 1).
+
+class solution{
+
+public ArrayList<Integer> inOrder(TreeNode arr, ArrayList<Integer> arr)
+{
+if(root == null) return arr;
+
+inOrder(root.left, arr);
+arr.add(root.val);
+inOrder(root.right, arr);
+
+return arr;
+}
+
+public int kthSmallest(TreeNode root, int k)
+{
+
+ ArrayList<Integer> nums = inOrder(root, new ArrayList<Integer>());
+ return nums.get(k-1);
+ }
+ }
