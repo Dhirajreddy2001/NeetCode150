@@ -1,0 +1,39 @@
+we are given a binary search tree and two nodes p and q such that p and q are part of the BST and our job is to find lowest common ancestor of the p and q;
+
+Algorithm:
+1. Start from root.
+
+2. If both p and q are smaller than root:
+   - LCA must be in the left subtree.
+
+3. If both p and q are greater than root:
+   - LCA must be in the right subtree.
+
+4. Otherwise:
+   - One node is on the left and one node is on the right.
+   - Or one node is equal to root.
+   - So current root is the LCA.
+
+
+Code:
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
+        int parentVal = root.val;
+        int pVal = p.val;
+        int qVal = q.val;
+
+        // Both nodes are greater, so LCA is in right subtree
+        if (pVal > parentVal && qVal > parentVal) {
+            return lowestCommonAncestor(root.right, p, q);
+        }
+
+        // Both nodes are smaller, so LCA is in left subtree
+        if (pVal < parentVal && qVal < parentVal) {
+            return lowestCommonAncestor(root.left, p, q);
+        }
+
+        // Nodes split on both sides, so current root is LCA
+        return root;
+    }
+}
