@@ -1,24 +1,35 @@
-searchInTree(word, node):
+addWord(word):
 
-1. Start from the given node.
+1. Start at root.
 
-2. For each character ch in word:
+2. For each character ch:
+   - If current node does not have ch, create a new TrieNode.
+   - Move to that child node.
 
-   a. If ch is a normal letter:
-      - If current node does not have this child, return false.
-      - Move to that child.
+3. After the last character, mark current node as word = true.
 
-   b. If ch is '.':
-      - Try every child of the current node.
-      - For each child, recursively search the remaining part of the word.
-      - If any child returns true, return true.
-      - If no child works, return false.
+search(word):
 
-3. After processing all characters:
-   - Return node.word.
+1. Start recursive search from root.
+
+2. For each character ch:
+
+   If ch is a normal letter:
+   - Check if current node has that child.
+   - If not, return false.
+   - If yes, move to that child.
+
+   If ch is '.':
+   - Try every child of current node.
+   - Recursively search the remaining substring from that child.
+   - If any child returns true, return true.
+   - If no child works, return false.
+
+3. After all characters are processed:
+   - Return true only if current node marks the end of a complete word.
 
 
-   class TrieNode {
+class TrieNode {
     // Stores child nodes for each character
     Map<Character, TrieNode> children = new HashMap<>();
 
