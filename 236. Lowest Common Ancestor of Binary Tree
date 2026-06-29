@@ -1,0 +1,44 @@
+we are given a binary tree and p and q nodes . our job is to find lowest common ancestor between them.
+Algoritm:
+1. If root is null, return null.
+
+2. If root is p or q, return root.
+
+3. Search for p and q in the left subtree.
+
+4. Search for p and q in the right subtree.
+
+5. If left and right both return non-null:
+   - One node was found on the left side.
+   - One node was found on the right side.
+   - So current root is the LCA.
+
+6. If only left is non-null, return left.
+
+7. If only right is non-null, return right.
+
+8. If both are null, return null.
+
+Code:
+class Solution {
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+
+        // If root is null, there is nothing to find
+        if (root == null) return null;
+
+        // If root is p or q, return root
+        if (root == p || root == q) return root;
+
+        // Search left subtree
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+
+        // Search right subtree
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+
+        // If both sides found something, root is the LCA
+        if (left != null && right != null) return root;
+
+        // Otherwise return whichever side found p or q
+        return left != null ? left : right;
+    }
+}
