@@ -1,0 +1,86 @@
+We have to convert given tree into a string and string back into the tree this ois called serialization and deserialization.
+
+We will do this with the recursive functions. We use preorder traversal.
+
+Algorithm:
+Step 1:
+Use preorder traversal to serialize the tree.
+
+Preorder means:
+root -> left -> right
+
+Step 2:
+If the current node is null, add "null," to the string.
+
+Step 3:
+If the current node is not null:
+add node value,
+serialize left subtree,
+serialize right subtree.
+
+Step 4:
+For deserialization, convert the string into a list.
+
+Step 5:
+Read the list from left to right.
+
+If the first value is "null":
+remove it and return null.
+
+Otherwise:
+create a TreeNode using the first value,
+remove that value,
+recursively build the left subtree,
+recursively build the right subtree.
+
+Step 6:
+Return the rebuilt root.
+
+
+
+
+public class Codec {
+
+    public String recserialize(TreeNode root, String str) {
+        if (root == null) {
+            str += "null,";
+        } else {
+            // Preorder: root, left, right
+            str += root.val + ",";
+            str = recserialize(root.left, str);
+            str = recserialize(root.right, str);
+        }
+
+        return str;
+    }
+
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        return recserialize(root, "");
+    }
+
+    public TreeNode recdeserialize(List<String> str) {
+        // Null marker means no node here
+        if (str.get(0).equals("null")) {
+            str.remove(0);
+            return null;
+        }
+
+        TreeNode root = new TreeNode(Integer.valueOf(str.get(0)));
+        str.remove(0);
+
+        // Build left and right using the remaining values
+        root.left = recdeserialize(str);
+        root.right = recdeserialize(str);
+
+        return root;
+    }
+
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        String[] strArray = data.split(",");
+        List<String> list = new LinkedList<>(Arrays.asList(strArray));
+
+        return recdeserialize(list);
+    }
+}
