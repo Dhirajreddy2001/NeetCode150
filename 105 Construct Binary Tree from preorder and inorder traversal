@@ -1,3 +1,23 @@
+Algorithm:
+1. Create a map to store every value's index in inorder.
+
+2. Keep a global preorder index starting at 0.
+
+3. Use preorder[preOrderIndex] as the current root.
+
+4. Find this root in inorder using the map.
+
+5. Everything left of root in inorder belongs to left subtree.
+
+6. Everything right of root in inorder belongs to right subtree.
+
+7. Recursively build left subtree first.
+
+8. Recursively build right subtree next.
+
+9. Return the root.
+
+
 class solution
 {
 int preorderIndex;
