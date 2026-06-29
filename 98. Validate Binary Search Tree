@@ -1,0 +1,71 @@
+Given the root of a binary tree, determine if it is a valid binary search tree (BST).
+
+A valid BST is defined as follows:
+
+The left subtree of a node contains only nodes with keys strictly less than the node's key.
+The right subtree of a node contains only nodes with keys strictly greater than the node's key.
+Both the left and right subtrees must also be binary search trees.
+
+
+ In BST left < root<right, so inorder traversal give us exactly the same thing, but for this we use a points that holds a previous value, if previous value if greater then previous then
+ Binary Search Tree is not valid return false, else true;
+
+
+
+ ##Algorithm
+ 1. Use inorder traversal: left -> root -> right.
+
+2. Keep a variable prev to store the previously visited value.
+
+3. Start with prev = null.
+
+4. During inorder traversal:
+   a. Recursively validate the left subtree.
+   b. Compare current node value with prev.
+   c. If prev is not null and current value <= prev, return false.
+   d. Update prev = current node value.
+   e. Recursively validate the right subtree.
+
+5. If the entire traversal finishes without violation, return true.
+
+
+
+solution 
+class Solution {
+
+    // This stores the previously visited node value during inorder traversal.
+    // We use Integer instead of int because we want to allow null at the beginning.
+    public Integer prev;
+
+    public boolean isValidBST(TreeNode root) {
+
+        // Before starting traversal, no previous value exists.
+        prev = null;
+
+        // Start inorder traversal and return whether the tree is valid.
+        return inOrder(root);
+    }
+
+    private boolean inOrder(TreeNode root) {
+
+        // If current node is null, it is valid.
+        // Empty subtree is always considered valid.
+        if (root == null) return true;
+
+        // First, check the left subtree.
+        // If left subtree is invalid, immediately return false.
+        if (!inOrder(root.left)) return false;
+
+        // Now we are visiting the current node.
+        // In inorder traversal of a BST, current value must be greater than previous value.
+        // If current value is less than or equal to previous value, it is not a valid BST.
+        if (prev != null && root.val <= prev) return false;
+
+        // Update prev to current node value.
+        // This current node becomes the previous node for the next visited node.
+        prev = root.val;
+
+        // Finally, check the right subtree.
+        return inOrder(root.right);
+    }
+}
