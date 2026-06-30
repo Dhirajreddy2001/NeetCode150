@@ -1,0 +1,32 @@
+class Solution {
+
+    // Maps original node to its cloned node
+    HashMap<Node, Node> visited = new HashMap<>();
+
+    public Node cloneGraph(Node node) {
+
+        // If graph is empty
+        if (node == null) {
+            return null;
+        }
+
+        // If this node is already cloned, return the clone
+        if (visited.containsKey(node)) {
+            return visited.get(node);
+        }
+
+        // Create a clone of current node with empty neighbors list
+        Node cloneNode = new Node(node.val, new ArrayList<Node>());
+
+        // Save it before cloning neighbors to avoid infinite cycles
+        visited.put(node, cloneNode);
+
+        // Clone all neighbors and add them to cloned node's neighbors
+        for (Node neighbor : node.neighbors) {
+            cloneNode.neighbors.add(cloneGraph(neighbor));
+        }
+
+        // Return cloned current node
+        return cloneNode;
+    }
+}
