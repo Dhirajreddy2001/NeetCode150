@@ -1,0 +1,57 @@
+Step 1:
+Create a max heap.
+
+The max heap will keep the farthest point at the top.
+
+Step 2:
+For every point in points:
+
+    Add the point into the heap.
+
+Step 3:
+If heap size becomes greater than k:
+
+    Remove the top point from the heap.
+
+Because the top point is the farthest point.
+
+Step 4:
+After checking all points, the heap will contain only k closest points.
+
+Step 5:
+Create a result array of size k.
+
+Step 6:
+Remove all points from the heap and store them in result.
+
+Step 7:
+Return result.
+
+Code:
+class Solution {
+    public int[][] kClosest(int[][] points, int k) {
+
+        PriorityQueue<int[]> maxHeap = new PriorityQueue<>(
+            (a,b) -> Integer.compare( b[0]*b[0] + b[1]*b[1], a[0]*a[0]+a[1]*a[1]));
+
+        for(int[] point : points)
+        {
+            maxHeap.add(point);
+            if(maxHeap.size() > k)
+            {
+                maxHeap.poll();
+            }
+        }
+
+
+        int[][] result = new int[k][2];
+
+        for(int i =0; i<k;i++)
+        {
+            result[i] = maxHeap.poll();
+        }
+
+        return result;
+        
+    }
+}
