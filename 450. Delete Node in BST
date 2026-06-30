@@ -1,0 +1,54 @@
+class Solution {
+    public TreeNode deleteNode(TreeNode root, int key) {
+
+        // If tree is empty or key is not found
+        if (root == null) return null;
+
+        // Key is bigger, search in right subtree
+        if (root.val < key) {
+            root.right = deleteNode(root.right, key);
+        } 
+        
+        // Key is smaller, search in left subtree
+        else if (root.val > key) {
+            root.left = deleteNode(root.left, key);
+        } 
+        
+        // Found the node to delete
+        else {
+            // No left child, replace node with right child
+            if (root.left == null) {
+                return root.right;
+            }
+
+            // No right child, replace node with left child
+            else if (root.right == null) {
+                return root.left;
+            }
+
+            // Node has both children
+            else {
+                // Find biggest value from left subtree
+                int leftMax = findMax(root.left);
+
+                // Replace current node value with leftMax
+                root.val = leftMax;
+
+                // Delete duplicate leftMax from left subtree
+                root.left = deleteNode(root.left, leftMax);
+            }
+        }
+
+        // Return updated root
+        return root;
+    }
+
+    public int findMax(TreeNode node) {
+        // Biggest value in BST is the rightmost node
+        while (node.right != null) {
+            node = node.right;
+        }
+
+        return node.val;
+    }
+}
