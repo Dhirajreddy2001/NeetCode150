@@ -1,0 +1,51 @@
+
+Algorithm:
+Step 1:
+Start from the root.
+
+Step 2:
+If root is null:
+    return null
+
+Step 3:
+First recursively remove target leaf nodes from the left subtree:
+
+    root.left = removeLeafNodes(root.left, target)
+
+Step 4:
+Then recursively remove target leaf nodes from the right subtree:
+
+    root.right = removeLeafNodes(root.right, target)
+
+Step 5:
+After left and right are processed, check current node:
+
+    if root.left == null
+    and root.right == null
+    and root.val == target
+
+    return null
+
+Step 6:
+Otherwise, return root.
+
+
+Code:
+class Solution {
+    public TreeNode removeLeafNodes(TreeNode root, int target) {
+
+        // Empty tree
+        if (root == null) return null;
+
+        // First clean left and right subtrees
+        root.left = removeLeafNodes(root.left, target);
+        root.right = removeLeafNodes(root.right, target);
+
+        // Remove current node if it is a target leaf
+        if (root.left == null && root.right == null && root.val == target) {
+            return null;
+        }
+
+        return root;
+    }
+}
