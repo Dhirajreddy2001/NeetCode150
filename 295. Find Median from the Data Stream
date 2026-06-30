@@ -1,0 +1,63 @@
+Step 1:
+Create two heaps:
+
+lo = max heap
+    stores the smaller half of numbers
+
+hi = min heap
+    stores the larger half of numbers
+
+Step 2:
+When adding a number:
+
+    Add the number into lo first.
+
+Step 3:
+Move the largest number from lo into hi.
+
+    This keeps smaller values in lo
+    and larger values in hi.
+
+Step 4:
+If hi has more elements than lo:
+
+    Move the smallest number from hi back into lo.
+
+Step 5:
+To find median:
+
+    If lo has more elements:
+        median = lo.peek()
+
+    Otherwise:
+        median = average of lo.peek() and hi.peek()
+
+
+
+Solution : 
+
+class MedianFinder {
+
+    private PriorityQueue<Integer> lo = new PriorityQueue<>((a,b) -> b - a); //maxHeap
+    private PriorityQueue<Integer> hi = new PriorityQueue<>((a,b) -> a - b); //minHeap
+
+    public MedianFinder() {
+        
+    }
+    
+    public void addNum(int num) {
+
+        lo.offer(num);
+        hi.offer(lo.poll());
+
+        if(lo.size() < hi.size())
+        {
+            lo.offer(hi.poll());
+        }
+        
+    }
+    
+    public double findMedian() {
+        return lo.size() > hi.size() ? lo.peek() : (lo.peek() + hi.peek())*0.5;
+    }
+}
