@@ -1,0 +1,73 @@
+We are given a binary tree such we have to return maximum sum and we also don't rob two linked houses;
+
+
+Step 1:
+For every node, calculate two values:
+
+    ans[0] = maximum money if we do NOT rob this node
+    ans[1] = maximum money if we DO rob this node
+
+Step 2:
+If the node is null:
+
+    return [0, 0]
+
+Step 3:
+Recursively get answers from left subtree:
+
+    left = robHouse(root.left)
+
+Step 4:
+Recursively get answers from right subtree:
+
+    right = robHouse(root.right)
+
+Step 5:
+If we do NOT rob current node:
+
+    ans[0] = max(left[0], left[1]) + max(right[0], right[1])
+
+Because if current node is skipped, we can choose the best option from both children.
+
+Step 6:
+If we DO rob current node:
+
+    ans[1] = root.val + left[0] + right[0]
+
+Because if current node is robbed, we cannot rob its direct children.
+
+Step 7:
+Return ans for the current node.
+
+Step 8:
+In the main rob function:
+
+    ans = robHouse(root)
+    return max(ans[0], ans[1])
+
+
+
+Code:
+class Solution {
+    public int rob(TreeNode root) {
+
+        int ans[] = robHouse(root);
+
+        return Math.max(ans[0], ans[1]);
+        
+    }
+    public int[] robHouse(TreeNode root)
+    {
+        if(root == null) return new int[2];
+
+        int left[] = robHouse(root.left);
+        int right[] = robHouse(root.right);
+
+        int ans[] = new int[2];
+
+        ans[0] = Math.max(left[0], left[1]) + Math.max(right[0], right[1]);
+        ans[1] =  root.val + left[0] + right[0];
+
+        return ans;
+    }
+}
