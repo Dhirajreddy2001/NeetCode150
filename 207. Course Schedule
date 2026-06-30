@@ -1,0 +1,84 @@
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+
+        // Graph: prerequisite course -> list of courses that depend on it
+        // Example: [1, 0] means to take course 1, first take course 0
+        // So we store: 0 -> 1
+        HashMap<Integer, List<Integer>> courseGraph = new HashMap<>();
+
+        // Build the graph from prerequisites
+        for (int[] pre : prerequisites) {
+
+            int course = pre[0];
+            int prerequisite = pre[1];
+
+            // If prerequisite already exists in graph, add this course to its list
+            if (courseGraph.containsKey(prerequisite)) {
+                courseGraph.get(prerequisite).add(course);
+            } 
+            else {
+                // Otherwise create a new list for this prerequisite
+                List<Integer> nextCourses = new LinkedList<>();
+                nextCourses.add(course);
+                courseGraph.put(prerequisite, nextCourses);
+            }
+        }
+
+        // visited stores courses in the current DFS path
+        // It helps detect cycles
+        HashSet<Integer> visited = new HashSet<>();
+
+        // Check every course because graph may be disconnected
+        for (int currentCourse = 0; currentCourse < numCourses; currentCourse++) {
+
+            // If any course is part of a cycle, return false
+            if (courseSchedule(currentCourse, visited, courseGraph) == false) {
+                return false;
+            }
+        }
+
+        // If no cycle is found, all courses can be completed
+        return true;
+    }
+
+    public boolean courseSchedule(
+        int course,
+        HashSet<Integer> visited,
+        HashMap<Integer, List<Integer>> courseGraph
+    ) {
+
+        // If course is already in current DFS path,
+        // we found a cycle
+        if (visited.contains(course)) {
+            return false;
+        }
+
+        // If course has no outgoing edges,
+        // it means this course does not unlock any other course
+        // or it has already been fully checked
+        if (courseGraph.get(course) == null) {
+            return true;
+        }
+
+        // Add course to current DFS path
+        visited.add(course);
+
+        // Visit all courses that depend on this course
+        for (int nextCourse : courseGraph.get(course)) {
+
+            // If any path has a cycle, return false
+            if (courseSchedule(nextCourse, visited, courseGraph) == false) {
+                return false;
+            }
+        }
+
+        // Remove course from current DFS path after checking it
+        visited.remove(course);
+
+        // Mark this course as fully processed
+        // Next time we see this course, we can directly return true
+        courseGraph.put(course, null);
+
+        return true;
+    }
+}
