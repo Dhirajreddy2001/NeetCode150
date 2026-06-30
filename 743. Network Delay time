@@ -1,0 +1,119 @@
+We are given a graph structure representing N nodes which are on a network , 
+our job is to find the maximum time taken for a signal sent from one node to reach all the nodes.
+We need the shortest time for the signal to reach every node.
+So this is a shortest path problem.
+Because edges have positive weights, we usually solve it using:
+Dijkstra’s Algorithm
+
+
+Algorithm: Dijkstra’s Algorithm
+We use Dijkstra because we need the minimum time for the signal to reach every node from starting node k.
+Steps:
+Build a graph using adjacency list.
+For each edge [u, v, w], store:
+u -> v with time w
+Create a distances array.
+distances[i] means the shortest time to reach node i.
+Initially, all are infinity.
+distances[k] = 0 because signal starts from k.
+Use a Min Heap / Priority Queue.
+It always gives the node with the smallest current distance.
+While the priority queue is not empty:
+Take the node with the smallest distance.
+Visit its neighbors.
+If going through this node gives a shorter path, update the distance.
+After processing:
+If any node is still infinity, return -1.
+Otherwise, return the maximum value from distances.
+Because the answer is when the last node receives the signal
+
+
+
+code:
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+
+        // Step 1: Build graph
+        // graph key = source node
+        // graph value = list of {target node, travel time}
+        Map<Integer, List<int[]>> graph = new HashMap<>();
+
+        for (int[] edge : times) {
+            int source = edge[0];
+            int target = edge[1];
+            int time = edge[2];
+
+            graph
+                .computeIfAbsent(source, x -> new ArrayList<>())
+                .add(new int[]{target, time});
+        }
+
+        // Step 2: Min heap based on distance/time
+        // Each element is {node, current shortest distance}
+        PriorityQueue<int[]> pq = new PriorityQueue<>(
+            Comparator.comparingInt(a -> a[1])
+        );
+
+        // Start from node k with distance 0
+        pq.offer(new int[]{k, 0});
+
+        // Step 3: distances[i] stores shortest time to reach node i
+        int[] distances = new int[n + 1];
+
+        // Initially, every node is unreachable
+        Arrays.fill(distances, Integer.MAX_VALUE);
+
+        // Distance from k to itself is 0
+        distances[k] = 0;
+
+        // Step 4: Dijkstra's algorithm
+        while (!pq.isEmpty()) {
+
+            int[] current = pq.poll();
+
+            int currentNode = current[0];
+            int currentDist = current[1];
+
+            // If this is an old longer distance, skip it
+            if (currentDist > distances[currentNode]) {
+                continue;
+            }
+
+            // If current node has neighbors, check them
+            if (graph.containsKey(currentNode)) {
+
+                for (int[] neighbor : graph.get(currentNode)) {
+
+                    int nextNode = neighbor[0];
+                    int travelTime = neighbor[1];
+
+                    // New distance to reach nextNode through currentNode
+                    int nextDist = currentDist + travelTime;
+
+                    // If we found a shorter path, update it
+                    if (nextDist < distances[nextNode]) {
+                        distances[nextNode] = nextDist;
+
+                        // Add updated node and distance to min heap
+                        pq.offer(new int[]{nextNode, nextDist});
+                    }
+                }
+            }
+        }
+
+        // Step 5: Find the maximum shortest distance
+        // Skip index 0 because nodes are labeled from 1 to n
+        int maxDist = Arrays.stream(distances)
+                            .skip(1)
+                            .max()
+                            .getAsInt();
+
+        // If any node is unreachable, maxDist will still be Integer.MAX_VALUE
+        if (maxDist == Integer.MAX_VALUE) {
+            return -1;
+        }
+
+        // Otherwise, return the time when the last node receives the signal
+        return maxDist;
+    }
+}
