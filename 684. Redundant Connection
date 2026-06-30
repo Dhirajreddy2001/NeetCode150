@@ -1,0 +1,54 @@
+class Solution {
+    public int[] findRedundantConnection(int[][] edges) {
+
+        // parent[i] represents the parent/root of node i
+        // Since nodes are from 1 to n, size is edges.length + 1
+        int[] parent = new int[edges.length + 1];
+
+        // Initially, every node is its own parent
+        for (int i = 1; i <= edges.length; i++) {
+            parent[i] = i;
+        }
+
+        // Process each edge one by one
+        for (int[] edge : edges) {
+
+            int node1 = edge[0];
+            int node2 = edge[1];
+
+            // Find the root parent of both nodes
+            int root1 = find(parent, node1);
+            int root2 = find(parent, node2);
+
+            // If both nodes already have the same root,
+            // adding this edge creates a cycle
+            if (root1 == root2) {
+                return edge;
+            }
+
+            // Union step:
+            // Connect root2 under root1
+            parent[root2] = root1;
+        }
+
+        // This line usually won't be reached for valid input
+        return new int[0];
+    }
+
+    private static int find(int[] parent, int node) {
+
+        // Keep moving up until we reach the root parent
+        while (node != parent[node]) {
+
+            // Path compression:
+            // Make the current node point directly to its grandparent
+            parent[node] = parent[parent[node]];
+
+            // Move node upward
+            node = parent[node];
+        }
+
+        // Return the root parent
+        return node;
+    }
+}
